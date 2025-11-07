@@ -15,7 +15,7 @@ class BookEntity(
 ): Entity() {
 
 	companion object {
-		private val BOOK_TEXTURE: Texture = loadTexture("assets/image/book.png")
+		private val BOOK_TEXTURE: Texture = loadTexture("assets/image/book_idle.png")
 	}
 
 
@@ -25,7 +25,7 @@ class BookEntity(
 
 		// rendering
 		addComponent(TextureComponent(texture))
-		addComponent(ScaleComponent(0.1))
+		addComponent(ScaleComponent(0.4))
 
 
 		addComponent(BookThrowComponent())
