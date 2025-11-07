@@ -45,7 +45,7 @@ fun main() {
 
 	game.addSystem(BookThrowSystem())
 
-	val background = kcolor(0, 24, 48, 255)
+	val backgroundTexture = loadTexture("assets/image/gj_bg.png")
 
 
 	while (!windowShouldClose()) {
@@ -55,13 +55,24 @@ fun main() {
 
 		//rendering
 		beginDrawing()
-		clearBackground(background)
+
+		drawTextureEx(
+			backgroundTexture,
+			kvector2(0f, 0f),
+			0f,
+			min(
+				getScreenWidth().toFloat() / backgroundTexture.width,
+				getScreenHeight().toFloat() / backgroundTexture.height
+			),
+			RAYWHITE
+		)
 
 		game.render()
 
 		endDrawing()
 	}
 
+	unloadTexture(backgroundTexture)
 	game.close()
 	closeAudioDevice()
 	closeWindow()
@@ -72,7 +83,7 @@ class CatEntity(
 
 	) : Entity() {
 	companion object {
-		private val CAT_TEXTURE: Texture = loadTexture("assets/image/cat.png")
+		private val CAT_TEXTURE: Texture = loadTexture("assets/image/cats_idle_aim.png")
 	}
 
 	init {
@@ -91,6 +102,6 @@ class CatEntity(
 
 		// rendering
 		addComponent(TextureComponent(texture))
-		addComponent(ScaleComponent(0.2))
+		addComponent(ScaleComponent(0.3))
 	}
 }
