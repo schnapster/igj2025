@@ -18,6 +18,7 @@ import dev.capybaralabs.igj2025.elements.ScaleComponent
 import dev.capybaralabs.igj2025.elements.SimplePositionComponent
 import dev.capybaralabs.igj2025.elements.SpeedComponent
 import dev.capybaralabs.igj2025.elements.TextureComponent
+import dev.capybaralabs.igj2025.elements.UiFpsSystem
 import dev.capybaralabs.igj2025.elements.kvector2
 import kotlin.math.max
 import kotlin.math.min
@@ -43,6 +44,7 @@ fun main() {
 
 	game.addSystem(BookThrowSystem())
 
+	game.addUiSystem(UiFpsSystem())
 
 	while (!windowShouldClose()) {
 		// updates
