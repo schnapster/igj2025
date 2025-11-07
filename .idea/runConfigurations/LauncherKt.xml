@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="LauncherKt" type="JetRunConfigurationType" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="dev.capybaralabs.igj2025.LauncherKt" />
+    <module name="igj2025.main" />
+    <shortenClasspath name="NONE" />
+    <option name="VM_PARAMETERS" value="-XstartOnFirstThread" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

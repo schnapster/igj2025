@@ -1,0 +1,38 @@
+plugins {
+	id "application"
+	id "org.jetbrains.kotlin.jvm" version "$kotlinVersion"
+}
+
+kotlin {
+	jvmToolchain {
+		languageVersion = JavaLanguageVersion.of(javaVersion)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation "io.github.electronstudio:jaylib-ffm:$jaylibVersion"
+}
+
+application {
+	mainClass = "dev.capybaralabs.igj2025.LauncherKt"
+	applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
+}
+
+distributions {
+	main {
+		contents {
+			// TODO this doesnt work. figure out how to include assets so that raylib can load it
+			from "src/main/resources/assets"
+		}
+	}
+}
+
+run {
+	if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
+		jvmArgs += "-XstartOnFirstThread"
+	}
+}
