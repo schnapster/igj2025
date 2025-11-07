@@ -43,8 +43,6 @@ fun main() {
 
 	game.addSystem(BookThrowSystem())
 
-	val backgroundTexture = loadTexture("assets/image/gj_bg.png")
-
 
 	while (!windowShouldClose()) {
 		// updates
@@ -53,27 +51,32 @@ fun main() {
 
 		//rendering
 		beginDrawing()
-
-		drawTextureEx(
-			backgroundTexture,
-			kvector2(0f, 0f),
-			0f,
-			max(
-				getScreenWidth().toFloat() / backgroundTexture.width,
-				getScreenHeight().toFloat() / backgroundTexture.height,
-			),
-			RAYWHITE,
-		)
+		renderBackground()
 
 		game.render()
 
 		endDrawing()
 	}
 
-	unloadTexture(backgroundTexture)
 	game.close()
 	closeAudioDevice()
 	closeWindow()
+}
+
+private val backgroundTexture by lazy {
+	loadTexture("assets/image/gj_bg.png")
+}
+fun renderBackground() {
+	drawTextureEx(
+		backgroundTexture,
+		kvector2(0f, 0f),
+		0f,
+		max(
+			getScreenWidth().toFloat() / backgroundTexture.width,
+			getScreenHeight().toFloat() / backgroundTexture.height,
+		),
+		RAYWHITE,
+	)
 }
 
 class CatEntity(
