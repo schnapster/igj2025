@@ -10,7 +10,7 @@ import dev.capybaralabs.igj2025.ecs.Entity
 import dev.capybaralabs.igj2025.ecs.System
 
 class BookEntity(
-	var attachedCat: CatEntity? = null,
+	var attachedToCat: CatEntity? = null,
 	val position: Vector2 = kvector2(getScreenWidth() / 2, getScreenHeight() - 200),
 ): Entity() {
 
@@ -21,7 +21,7 @@ class BookEntity(
 
 	init {
 		val texture = BOOK_TEXTURE
-		addComponent(CatRelativePositionComponent({ this.attachedCat }, position))
+		addComponent(HeldByCatPositionComponent({ this.attachedToCat }, position))
 
 		// rendering
 		addComponent(TextureComponent(texture))
@@ -34,7 +34,7 @@ class BookEntity(
 }
 
 // used by the book to be rendered above a cat
-class CatRelativePositionComponent(
+class HeldByCatPositionComponent(
 	val attachedCat: () -> CatEntity?,
 	val bookPosition: Vector2,
 ) : PositionComponent {
@@ -55,6 +55,9 @@ class BookThrowSystem(): System {
 		val book = entity as? BookEntity ?: return
 
 		val throwComponent = book.findComponent(BookThrowComponent::class) ?: return
+		val heldByCat = book.findComponent(HeldByCatPositionComponent::class) ?: return
+		val cat = book.attachedToCat ?: return
+
 
 		if (isMouseButtonPressed(MOUSE_BUTTON_LEFT))  {
 			throwComponent.start = getMousePosition()
@@ -71,16 +74,17 @@ class BookThrowSystem(): System {
 		val throwVector = end - start
 
 
-		// update the position to be the cat: TODO need to offset just like the render?
-		book.position.x = book.attachedCat?.position?.x ?: book.position.x
-		book.position.y = book.attachedCat?.position?.y ?: book.position.y
-		book.attachedCat = null
+		// unattach from cat
+		book.position.x = heldByCat.position.x
+		book.position.y = heldByCat.position.y
+		book.attachedToCat = null
 
 
-		// update speed & direction based to throw vector
+		// update speed & direction based on throw vector
 		val speed = (throwVector.x + throwVector.y) / 100
-		book.addComponent(SpeedComponent(speed.toInt()))
+		book.addComponent(SpeedComponent(speed))
 		book.addComponent(DirectionComponent(throwVector * -1))
-
+		book.addComponent(ThrownComponent(cat.floor())) // do not fall below from where it was thrown
+		book.addComponent(GravityAffectedComponent)
 	}
 }

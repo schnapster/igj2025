@@ -3,7 +3,9 @@ package dev.capybaralabs.igj2025.elements
 import com.raylib.Raylib.*
 import com.raylib.Raylib.KeyboardKey.*
 import com.raylib.Vector2
-import dev.capybaralabs.igj2025.ecs.*
+import dev.capybaralabs.igj2025.ecs.Component
+import dev.capybaralabs.igj2025.ecs.Entity
+import dev.capybaralabs.igj2025.ecs.System
 
 
 interface PositionComponent: Component {
@@ -16,11 +18,11 @@ class SimplePositionComponent(
 
 
 class DirectionComponent(
-	val direction: Vector2,
+	var direction: Vector2,
 ) : Component
 
 class SpeedComponent(
-	val speed: Int,
+	var speed: Float,
 ) : Component
 
 

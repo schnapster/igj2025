@@ -12,12 +12,14 @@ import dev.capybaralabs.igj2025.elements.CircleShapeComponent
 import dev.capybaralabs.igj2025.elements.DirectionComponent
 import dev.capybaralabs.igj2025.elements.DirectionInputComponent
 import dev.capybaralabs.igj2025.elements.DirectionInputSystem
+import dev.capybaralabs.igj2025.elements.GravitySystem
 import dev.capybaralabs.igj2025.elements.MoveSystem
 import dev.capybaralabs.igj2025.elements.RelationalTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.ScaleComponent
 import dev.capybaralabs.igj2025.elements.SimplePositionComponent
 import dev.capybaralabs.igj2025.elements.SpeedComponent
 import dev.capybaralabs.igj2025.elements.TextureComponent
+import dev.capybaralabs.igj2025.elements.ThrowSystem
 import dev.capybaralabs.igj2025.elements.UiFpsSystem
 import dev.capybaralabs.igj2025.elements.kvector2
 import kotlin.math.max
@@ -43,6 +45,9 @@ fun main() {
 	game.addEntity(BookEntity(cat))
 
 	game.addSystem(BookThrowSystem())
+	game.addSystem(GravitySystem())
+	game.addSystem(ThrowSystem())
+//	game.addSystem(AirDragSystem())
 
 	game.addUiSystem(UiFpsSystem())
 
@@ -89,13 +94,15 @@ class CatEntity(
 		private val CAT_TEXTURE: Texture = loadTexture("assets/image/cats_idle_aim.png")
 	}
 
+	private val scale = 0.3
+
 	init {
 		val texture = CAT_TEXTURE
 
 		//movement
 		addComponent(SimplePositionComponent(position))
 		addComponent(DirectionComponent(kvector2(0, 0)))
-		addComponent(SpeedComponent(400))
+		addComponent(SpeedComponent(400f))
 
 		val radius = min(texture.width, texture.height) / 2f
 		addComponent(CircleShapeComponent(radius))
@@ -105,6 +112,10 @@ class CatEntity(
 
 		// rendering
 		addComponent(TextureComponent(texture))
-		addComponent(ScaleComponent(0.3))
+		addComponent(ScaleComponent(scale))
+	}
+
+	fun floor(): Float {
+		return (position.y + (CAT_TEXTURE.height / 2f) * scale).toFloat()
 	}
 }

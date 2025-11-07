@@ -4,6 +4,7 @@ import com.raylib.Color
 import com.raylib.Rectangle
 import com.raylib.Texture
 import com.raylib.Vector2
+import kotlin.math.sqrt
 
 fun kvector2(x: Number, y: Number): Vector2 {
 	return Vector2(x.toFloat(), y.toFloat())
@@ -41,6 +42,8 @@ operator fun Vector2.minus(other: Vector2): Vector2 {
 
 fun Vector2.copy(): Vector2 = Vector2(x, y)
 
+
+fun Vector2.length(): Float = sqrt(x * x + y * y)
 
 fun Texture.size(): Vector2 {
 	return kvector2(width, height)
