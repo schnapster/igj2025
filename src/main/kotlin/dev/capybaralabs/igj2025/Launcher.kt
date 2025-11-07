@@ -15,6 +15,7 @@ import dev.capybaralabs.igj2025.elements.DirectionInputSystem
 import dev.capybaralabs.igj2025.elements.GravitySystem
 import dev.capybaralabs.igj2025.elements.MoveSystem
 import dev.capybaralabs.igj2025.elements.RelationalTextureRenderSystem
+import dev.capybaralabs.igj2025.elements.RotationSystem
 import dev.capybaralabs.igj2025.elements.ScaleComponent
 import dev.capybaralabs.igj2025.elements.SimplePositionComponent
 import dev.capybaralabs.igj2025.elements.SpeedComponent
@@ -48,6 +49,7 @@ fun main() {
 	game.addSystem(GravitySystem())
 	game.addSystem(ThrowSystem())
 //	game.addSystem(AirDragSystem())
+	game.addSystem(RotationSystem())
 
 	game.addUiSystem(UiFpsSystem())
 

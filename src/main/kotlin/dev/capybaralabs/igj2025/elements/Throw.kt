@@ -8,6 +8,7 @@ import kotlin.math.min
 // entity should not go below its floor (y coordinate)
 class ThrownComponent(
 	val floor: Float,
+	val onFloored: () -> Unit,
 ) : Component
 
 class ThrowSystem : System {
@@ -21,8 +22,8 @@ class ThrowSystem : System {
 		}
 		if (position.y >= thrownComponent.floor && speedComponent.speed != 0f) {
 			// we hit the floor, stop moving.
-			println("Hit the floor, stopping")
-			speedComponent.speed = 0f
+			println("Hit the floor")
+			thrownComponent.onFloored()
 		}
 		position.y = min(thrownComponent.floor, position.y)
 	}

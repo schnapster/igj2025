@@ -1,13 +1,16 @@
 package dev.capybaralabs.igj2025.elements
 
-import dev.capybaralabs.igj2025.ecs.*
+import dev.capybaralabs.igj2025.ecs.Component
+import dev.capybaralabs.igj2025.ecs.Entity
+import dev.capybaralabs.igj2025.ecs.System
 
 class RotatingComponent(
-	val rotationSpeed: Float, // degrees
-	val clockwise: Boolean = true,
+	var rotationSpeed: Float, // degrees
+	var clockwise: Boolean = true,
 ) : Component {
 
 	var rotation = 0f
+	var paused = false
 }
 
 
@@ -15,7 +18,7 @@ class RotationSystem : System {
 
 	override fun update(dt: Float, entity: Entity) {
 		val rotating = entity.findComponent(RotatingComponent::class)
-		if (rotating == null) {
+		if (rotating == null || rotating.paused) {
 			return
 		}
 

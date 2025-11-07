@@ -1,6 +1,5 @@
 package dev.capybaralabs.igj2025.ecs
 
-import dev.capybaralabs.igj2025.ecs.Component
 import kotlin.reflect.KClass
 
 open class Entity {
@@ -8,6 +7,18 @@ open class Entity {
 
 	fun addComponent(component: Component) {
 		components.add(component)
+	}
+
+	fun addComponents(vararg components: Component) {
+		this.components.addAll(components)
+	}
+
+	fun removeComponent(component: Component) {
+		components.remove(component)
+	}
+
+	fun removeComponents(vararg components: Component) {
+		this.components.removeAll(components.toSet())
 	}
 
 	fun <T : Component> findComponent(type: KClass<T>): T? {

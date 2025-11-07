@@ -8,6 +8,7 @@ import dev.capybaralabs.igj2025.CatEntity
 import dev.capybaralabs.igj2025.ecs.Component
 import dev.capybaralabs.igj2025.ecs.Entity
 import dev.capybaralabs.igj2025.ecs.System
+import java.util.concurrent.ThreadLocalRandom
 
 class BookEntity(
 	var attachedToCat: CatEntity? = null,
@@ -82,9 +83,37 @@ class BookThrowSystem(): System {
 
 		// update speed & direction based on throw vector
 		val speed = (throwVector.x + throwVector.y) / 100
-		book.addComponent(SpeedComponent(speed))
-		book.addComponent(DirectionComponent(throwVector * -1))
-		book.addComponent(ThrownComponent(cat.floor())) // do not fall below from where it was thrown
-		book.addComponent(GravityAffectedComponent)
+		val throwDirection = throwVector * -1
+
+		val rotationSpeed = getRandomValue(10, 40).toFloat()
+		val rotationClockwise = ThreadLocalRandom.current().nextBoolean()
+
+
+		val speedComponent = book.findComponent(SpeedComponent::class)
+			?.also { it.speed = speed }
+			?: SpeedComponent(speed)
+		val directionComponent = book.findComponent(DirectionComponent::class)
+			?.also { it.direction = throwDirection }
+			?: DirectionComponent(throwDirection)
+		val rotatingComponent = book.findComponent(RotatingComponent::class)
+			?.also {
+				it.rotationSpeed = rotationSpeed
+				it.clockwise = rotationClockwise
+				it.paused = false
+			}
+			?: RotatingComponent(rotationSpeed, rotationClockwise)
+
+		val thrownComponent = ThrownComponent(cat.floor()) {
+			rotatingComponent.paused = true
+			speedComponent.speed = 0f
+		}
+
+		book.addComponents(
+			speedComponent,
+			directionComponent,
+			GravityAffectedComponent,
+			rotatingComponent,
+			thrownComponent,
+		)
 	}
 }
