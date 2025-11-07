@@ -13,21 +13,20 @@ import dev.capybaralabs.igj2025.elements.DirectionComponent
 import dev.capybaralabs.igj2025.elements.DirectionInputComponent
 import dev.capybaralabs.igj2025.elements.DirectionInputSystem
 import dev.capybaralabs.igj2025.elements.MoveSystem
-import dev.capybaralabs.igj2025.elements.PositionComponent
 import dev.capybaralabs.igj2025.elements.RelationalTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.ScaleComponent
 import dev.capybaralabs.igj2025.elements.SimplePositionComponent
 import dev.capybaralabs.igj2025.elements.SpeedComponent
 import dev.capybaralabs.igj2025.elements.TextureComponent
-import dev.capybaralabs.igj2025.elements.copy
-import dev.capybaralabs.igj2025.elements.kcolor
+import dev.capybaralabs.igj2025.elements.UiFpsSystem
 import dev.capybaralabs.igj2025.elements.kvector2
-import dev.capybaralabs.igj2025.elements.plus
-import java.awt.print.Book
+import kotlin.math.max
 import kotlin.math.min
 
 fun main() {
 	initWindow(1200, 900, "Henlo!")
+//	toggleFullscreen()
+	toggleBorderlessWindowed()
 	setExitKey(KEY_ESCAPE)
 	setTargetFPS(144)
 	initAudioDevice()
@@ -45,8 +44,7 @@ fun main() {
 
 	game.addSystem(BookThrowSystem())
 
-	val backgroundTexture = loadTexture("assets/image/gj_bg.png")
-
+	game.addUiSystem(UiFpsSystem())
 
 	while (!windowShouldClose()) {
 		// updates
@@ -55,27 +53,32 @@ fun main() {
 
 		//rendering
 		beginDrawing()
-
-		drawTextureEx(
-			backgroundTexture,
-			kvector2(0f, 0f),
-			0f,
-			min(
-				getScreenWidth().toFloat() / backgroundTexture.width,
-				getScreenHeight().toFloat() / backgroundTexture.height
-			),
-			RAYWHITE
-		)
+		renderBackground()
 
 		game.render()
 
 		endDrawing()
 	}
 
-	unloadTexture(backgroundTexture)
 	game.close()
 	closeAudioDevice()
 	closeWindow()
+}
+
+private val backgroundTexture by lazy {
+	loadTexture("assets/image/gj_bg.png")
+}
+fun renderBackground() {
+	drawTextureEx(
+		backgroundTexture,
+		kvector2(0f, 0f),
+		0f,
+		max(
+			getScreenWidth().toFloat() / backgroundTexture.width,
+			getScreenHeight().toFloat() / backgroundTexture.height,
+		),
+		RAYWHITE,
+	)
 }
 
 class CatEntity(
