@@ -18,6 +18,7 @@ import dev.capybaralabs.igj2025.elements.RelationalTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RotationSystem
 import dev.capybaralabs.igj2025.elements.ScaleComponent
 import dev.capybaralabs.igj2025.elements.SimplePositionComponent
+import dev.capybaralabs.igj2025.elements.SimpleWallComponent
 import dev.capybaralabs.igj2025.elements.SpeedComponent
 import dev.capybaralabs.igj2025.elements.TextureComponent
 import dev.capybaralabs.igj2025.elements.ThrowSystem
@@ -29,7 +30,7 @@ import kotlin.math.min
 fun main() {
 	initWindow(1200, 900, "Henlo!")
 //	toggleFullscreen()
-	toggleBorderlessWindowed()
+//	toggleBorderlessWindowed()
 	setExitKey(KEY_ESCAPE)
 	setTargetFPS(144)
 	initAudioDevice()
@@ -105,6 +106,12 @@ class CatEntity(
 		addComponent(SimplePositionComponent(position))
 		addComponent(DirectionComponent(kvector2(0, 0)))
 		addComponent(SpeedComponent(400f))
+		addComponent(SimpleWallComponent(
+			marginTop = ((CAT_TEXTURE.height / 2f) * scale).toFloat() + 50f,
+			marginBottom = ((CAT_TEXTURE.height / 2f) * scale).toFloat(),
+			marginLeft = ((CAT_TEXTURE.width / 2f) * scale).toFloat(),
+			marginRight = ((CAT_TEXTURE.width / 2f) * scale).toFloat())
+		)
 
 		val radius = min(texture.width, texture.height) / 2f
 		addComponent(CircleShapeComponent(radius))

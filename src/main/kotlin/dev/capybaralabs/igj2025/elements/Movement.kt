@@ -25,6 +25,14 @@ class SpeedComponent(
 	var speed: Float,
 ) : Component
 
+class SimpleWallComponent(
+	var baseMargin: Float = 0f,
+	var marginTop: Float = 0f,
+	var marginBottom: Float = 0f,
+	var marginLeft: Float = 0f,
+	var marginRight: Float = 0f,
+) : Component
+
 
 class DirectionInputComponent(
 	val upKey: Int = KEY_W,
@@ -59,8 +67,44 @@ class MoveSystem : System {
 		if (position == null || direction == null || speed == null) {
 			return
 		}
+		var borderTop = 0f;
+		var borderBottom = getScreenHeight().toFloat();
+		var borderLeft = 0f;
+		var borderRight = getScreenWidth().toFloat();
 
-		position.x += direction.x * speed * dt
-		position.y += direction.y * speed * dt
+		val wallComponent = entity.findComponent(SimpleWallComponent::class)
+		if (wallComponent != null) {
+
+			val baseMargin = wallComponent.baseMargin
+			val marginTop = wallComponent.marginTop + baseMargin
+			val marginBottom = wallComponent.marginBottom + baseMargin
+			val marginLeft = wallComponent.marginLeft + baseMargin
+			val marginRight = wallComponent.marginRight + baseMargin
+
+			borderTop += marginTop
+			borderBottom -= marginBottom
+			borderLeft += marginLeft
+			borderRight -= marginRight
+
+		}
+
+		var newPositionX = position.x + direction.x * speed * dt
+		var newPositionY = position.y + direction.y * speed * dt
+
+		if (newPositionX < borderLeft) {
+			newPositionX = borderLeft;
+		}
+		if (newPositionX > borderRight) {
+			newPositionX = borderRight;
+		}
+		if (newPositionY < borderTop) {
+			newPositionY = borderTop;
+		}
+		if (newPositionY > borderBottom) {
+			newPositionY = borderBottom;
+		}
+
+		position.x = newPositionX
+		position.y = newPositionY
 	}
 }

@@ -19,6 +19,7 @@ class BookEntity(
 		private val BOOK_TEXTURE: Texture = loadTexture("assets/image/book_idle.png")
 	}
 
+	val scale = 0.4
 
 	init {
 		val texture = BOOK_TEXTURE
@@ -26,7 +27,8 @@ class BookEntity(
 
 		// rendering
 		addComponent(TextureComponent(texture))
-		addComponent(ScaleComponent(0.4))
+		addComponent(ScaleComponent(scale))
+		addComponent(SimpleWallComponent(((texture.width / 2f) * scale).toFloat()))
 
 
 		addComponent(BookThrowComponent())
