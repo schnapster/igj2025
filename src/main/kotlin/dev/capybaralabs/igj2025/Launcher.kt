@@ -11,6 +11,8 @@ import dev.capybaralabs.igj2025.elements.BookFlyingSystem
 import dev.capybaralabs.igj2025.elements.BookLaunchSystemCatToCat
 import dev.capybaralabs.igj2025.elements.BorderSystem
 import dev.capybaralabs.igj2025.elements.CatEntity
+import dev.capybaralabs.igj2025.elements.CatEntity.Companion.CAT_TEXTURE_BLUE
+import dev.capybaralabs.igj2025.elements.CatEntity.Companion.CAT_TEXTURE_ORANGE
 import dev.capybaralabs.igj2025.elements.ControlledDirectionInputComponent
 import dev.capybaralabs.igj2025.elements.ControlledDirectionInputSystem
 import dev.capybaralabs.igj2025.elements.DirectionAiComponent
@@ -114,8 +116,8 @@ fun spawnTwoCatsWasdAndArrowsAndBook(game: Game) {
 }
 
 fun spawnThreeCatsWasdSwitcherAndBook(game: Game) {
-	val catA = CatEntity(position = kvector2(getScreenWidth() / 5, getScreenHeight() - 200))
-	val catB = CatEntity(position = kvector2(getScreenWidth() / 5 * 4, getScreenHeight() - 200))
+	val catA = CatEntity(position = kvector2(getScreenWidth() / 5, getScreenHeight() - 200), texture = CAT_TEXTURE_BLUE)
+	val catB = CatEntity(position = kvector2(getScreenWidth() / 5 * 4, getScreenHeight() - 200), texture = CAT_TEXTURE_ORANGE)
 	val catC = CatEntity(position = kvector2(getScreenWidth() / 2, getScreenHeight() / 3 - 200))
 
 	val cats = setOf(catA, catB, catC)

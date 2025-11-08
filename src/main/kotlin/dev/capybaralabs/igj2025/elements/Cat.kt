@@ -9,27 +9,29 @@ import kotlin.math.min
 class CatEntity(
 	val position: Vector2 = kvector2(getScreenWidth() / 2, getScreenHeight() - 200),
 	directionInput: DirectionInputComponent = DirectionInputComponent(),
+	val texture: Texture = CAT_TEXTURE_DEFAULT,
+) : Entity() {
 
-	) : Entity() {
 	companion object {
-		private val CAT_TEXTURE: Texture = loadTexture("assets/image/cats_idle_aim.png")
+		val CAT_TEXTURE_DEFAULT: Texture = loadTexture("assets/image/cats_idle_aim.png")
+		val CAT_TEXTURE_WHITE: Texture = loadTexture("assets/image/cat_idle_white.png")
+		val CAT_TEXTURE_ORANGE: Texture = loadTexture("assets/image/cat_idle_red.png")
+		val CAT_TEXTURE_BLUE: Texture = loadTexture("assets/image/cat_idle_blue.png")
 	}
 
 	private val scale = 0.3
 
 	init {
-		val texture = CAT_TEXTURE
-
 		//movement
 		addComponent(SimplePositionComponent(position))
 		addComponent(DirectionComponent(kvector2(0, 0)))
 		addComponent(SpeedComponent(400f))
 		addComponent(
 			BorderComponent(
-				marginTop = ((CAT_TEXTURE.height / 2f) * scale).toFloat() + 50f,
-				marginBottom = ((CAT_TEXTURE.height / 2f) * scale).toFloat(),
-				marginLeft = ((CAT_TEXTURE.width / 2f) * scale).toFloat(),
-				marginRight = ((CAT_TEXTURE.width / 2f) * scale).toFloat(),
+				marginTop = ((texture.height / 2f) * scale).toFloat() + 50f,
+				marginBottom = ((texture.height / 2f) * scale).toFloat(),
+				marginLeft = ((texture.width / 2f) * scale).toFloat(),
+				marginRight = ((texture.width / 2f) * scale).toFloat(),
 			),
 		)
 
@@ -45,7 +47,7 @@ class CatEntity(
 	}
 
 	fun floor(): Float {
-		return (position.y + (CAT_TEXTURE.height / 2f) * scale).toFloat()
+		return (position.y + (texture.height / 2f) * scale).toFloat()
 	}
 
 	fun handsPosition(): Vector2 {
