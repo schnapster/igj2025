@@ -41,7 +41,7 @@ fun main() {
 
 	game.addSystem(RelationalTextureRenderSystem())
 
-	spawnTwoCatsWasdAndArrowsAndBook(game)
+	spawnThreeCatsWasdSwitcherAndBook(game)
 
 //	game.addSystem(BookLaunchSystem())
 	game.addSystem(BookLaunchSystemCatToCat())
@@ -114,6 +114,24 @@ fun spawnTwoCatsWasdAndArrowsAndBook(game: Game) {
 		),
 	)
 }
+
+fun spawnThreeCatsWasdSwitcherAndBook(game: Game) {
+	val catA = CatEntity(position = kvector2(getScreenWidth() / 5, getScreenHeight() - 200))
+	val catB = CatEntity(position = kvector2(getScreenWidth() / 5 * 4, getScreenHeight() - 200))
+	val catC = CatEntity(position = kvector2(getScreenWidth() / 2, getScreenHeight() / 3 - 200))
+
+	val book = BookEntity(catA)
+
+	val enemy = EnemyEntity(
+		position = kvector2(getScreenWidth() / 5 * 4, getScreenHeight() - 200),
+		directionAiInput = DirectionAiComponent(
+			listOf(catA, catB, catC),
+			book,
+		),
+	)
+	game.addEntities(catA, catB, catC, book, enemy)
+}
+
 
 private val backgroundTexture by lazy {
 	loadTexture("assets/image/gj_bg.png")

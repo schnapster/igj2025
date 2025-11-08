@@ -14,6 +14,9 @@ class Game(
 	fun addEntity(entity: Entity) {
 		entities += entity
 	}
+	fun addEntities(vararg toAdd: Entity) {
+		entities += toAdd
+	}
 
 	fun removeEntity(entity: Entity) {
 		entities -= entity
