@@ -1,6 +1,7 @@
 plugins {
 	id "application"
 	id "org.jetbrains.kotlin.jvm" version "$kotlinVersion"
+	id "org.beryx.runtime" version "$badassRuntimePluginVersion"
 }
 
 kotlin {
@@ -43,5 +44,44 @@ distributions {
 run {
 	if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
 		jvmArgs += "-XstartOnFirstThread"
+	}
+}
+
+runtime {
+	options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+
+	modules = ['java.desktop', 'java.sql', 'jdk.unsupported']
+
+	jpackage {
+		imageName = 'igj2025'
+		installerName = 'igj2025'
+		appVersion = '1.0.0'
+
+		// Platform-specific options
+		def os = org.gradle.internal.os.OperatingSystem.current()
+
+		if (os.isMacOsX()) {
+			jvmArgs = ['-XstartOnFirstThread']
+			installerType = 'dmg'
+			def macIcon = file('src/main/resources/assets/icon.icns')
+			if (macIcon.exists()) {
+				imageOptions = ['--icon', macIcon.absolutePath]
+			}
+		} else if (os.isWindows()) {
+			installerType = 'msi'
+			def winIcon = file('src/main/resources/assets/icon.ico')
+			if (winIcon.exists()) {
+				imageOptions = ['--icon', winIcon.absolutePath]
+			}
+		} else if (os.isLinux()) {
+			installerType = 'deb'
+			def linuxIcon = file('src/main/resources/assets/icon.png')
+			if (linuxIcon.exists()) {
+				imageOptions = ['--icon', linuxIcon.absolutePath]
+			}
+		}
+
+		// Resource directory to include assets
+		resourceDir = file('src/main/resources')
 	}
 }
