@@ -4,7 +4,6 @@ import com.raylib.Raylib.*
 import com.raylib.Raylib.MouseButton.MOUSE_BUTTON_LEFT
 import com.raylib.Texture
 import com.raylib.Vector2
-import dev.capybaralabs.igj2025.CatEntity
 import dev.capybaralabs.igj2025.ecs.Component
 import dev.capybaralabs.igj2025.ecs.Entity
 import dev.capybaralabs.igj2025.ecs.System

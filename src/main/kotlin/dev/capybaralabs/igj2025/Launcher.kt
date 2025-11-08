@@ -6,6 +6,7 @@ import dev.capybaralabs.igj2025.ecs.Game
 import dev.capybaralabs.igj2025.elements.BookEntity
 import dev.capybaralabs.igj2025.elements.BookThrowSystem
 import dev.capybaralabs.igj2025.elements.CatEntity
+import dev.capybaralabs.igj2025.elements.DirectionInputComponent
 import dev.capybaralabs.igj2025.elements.DirectionInputSystem
 import dev.capybaralabs.igj2025.elements.GravitySystem
 import dev.capybaralabs.igj2025.elements.MoveSystem
@@ -31,9 +32,7 @@ fun main() {
 
 	game.addSystem(RelationalTextureRenderSystem())
 
-	val cat = CatEntity()
-	game.addEntity(cat)
-	game.addEntity(BookEntity(cat))
+	spawnTwoCatsWasdAndArrowsAndBook(game)
 
 	game.addSystem(BookThrowSystem())
 	game.addSystem(GravitySystem())
@@ -61,6 +60,34 @@ fun main() {
 	closeAudioDevice()
 	closeWindow()
 }
+
+
+fun spawnTwoCatsWasdAndArrowsAndBook(game: Game) {
+	val wasdCat = CatEntity(
+		position = kvector2(getScreenWidth() / 5, getScreenHeight() - 200),
+		directionInput = DirectionInputComponent(
+			KEY_W,
+			KEY_S,
+			KEY_A,
+			KEY_D,
+		),
+	)
+	game.addEntity(wasdCat)
+
+	val arrowCat = CatEntity(
+		position = kvector2(getScreenWidth() / 5 * 4, getScreenHeight() - 200),
+		directionInput = DirectionInputComponent(
+			KEY_UP,
+			KEY_DOWN,
+			KEY_LEFT,
+			KEY_RIGHT,
+		),
+	)
+	game.addEntity(arrowCat)
+
+	game.addEntity(BookEntity(wasdCat))
+}
+
 
 private val backgroundTexture by lazy {
 	loadTexture("assets/image/gj_bg.png")

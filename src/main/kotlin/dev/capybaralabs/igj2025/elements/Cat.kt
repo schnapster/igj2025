@@ -8,6 +8,7 @@ import kotlin.math.min
 
 class CatEntity(
 	val position: Vector2 = kvector2(getScreenWidth() / 2, getScreenHeight() - 200),
+	directionInput: DirectionInputComponent = DirectionInputComponent(),
 
 	) : Entity() {
 	companion object {
@@ -36,7 +37,7 @@ class CatEntity(
 		addComponent(CircleShapeComponent(radius))
 
 		// input
-		addComponent(DirectionInputComponent())
+		addComponent(directionInput)
 
 		// rendering
 		addComponent(TextureComponent(texture))
