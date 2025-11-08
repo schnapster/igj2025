@@ -3,7 +3,7 @@
     <option name="MAIN_CLASS_NAME" value="dev.capybaralabs.igj2025.LauncherKt" />
     <module name="igj2025.main" />
     <shortenClasspath name="NONE" />
-    <option name="VM_PARAMETERS" value="-XstartOnFirstThread" />
+    <option name="VM_PARAMETERS" value="-XstartOnFirstThread --enable-native-access=ALL-UNNAMED" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
