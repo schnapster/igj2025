@@ -24,6 +24,7 @@ import dev.capybaralabs.igj2025.elements.GravitySystem
 import dev.capybaralabs.igj2025.elements.MoveSystem
 import dev.capybaralabs.igj2025.elements.RelationalTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RotationSystem
+import dev.capybaralabs.igj2025.elements.ScoreUiSystem
 import dev.capybaralabs.igj2025.elements.ThrowSystem
 import dev.capybaralabs.igj2025.elements.kvector2
 import kotlin.math.max
@@ -59,6 +60,7 @@ fun main() {
 	game.addSystem(RotationSystem())
 
 	game.addUiSystem(FpsUiSystem())
+	game.addUiSystem(ScoreUiSystem())
 
 	while (!windowShouldClose()) {
 		// updates

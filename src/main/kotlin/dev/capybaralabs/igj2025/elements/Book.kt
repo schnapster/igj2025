@@ -33,6 +33,9 @@ class BookEntity(
 		addComponent(TextureComponent(texture))
 		addComponent(ScaleComponent(scale))
 		addComponent(BorderComponent(width() / 2f))
+
+
+		addComponent(ScoreComponent())
 	}
 
 	fun width(): Float {
@@ -108,9 +111,14 @@ class BookLaunchSystemCatToCat() : System {
 			}
 			?: RotatingComponent(rotationSpeed, rotationClockwise)
 
+		val throwStart = book.position.copy()
 		val thrownComponent = FlyingComponent(targetCat) {
 			rotatingComponent.paused = true
 			speedComponent.speed = 0f
+			val throwEnd = book.position.copy()
+			val score = (throwStart - throwEnd).length()
+			println("Score increased by $score")
+			book.findComponent(ScoreComponent::class)?.score += score
 		}
 
 		book.addComponents(
