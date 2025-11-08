@@ -90,6 +90,12 @@ fun main() {
 
 	var screenState = ScreenState.START
 	while (!windowShouldClose()) {
+
+		// state changes
+		if (isKeyReleased(KEY_ENTER) && screenState == ScreenState.START) {
+			screenState = ScreenState.GAME
+		}
+
 		// updates
 		val dt = getFrameTime()
 
