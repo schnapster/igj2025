@@ -78,8 +78,11 @@ fun main() {
 	while (!windowShouldClose()) {
 
 		// state changes
-		if (isKeyReleased(KEY_ENTER) && (screenState == ScreenState.START || screenState == ScreenState.END)) {
+		if (isKeyReleased(KEY_ENTER) && screenState == ScreenState.START) {
 			screenState = ScreenState.GAME
+		}
+		if (isKeyReleased(KEY_ENTER) && screenState == ScreenState.END) {
+			screenState = ScreenState.START
 		}
 
 		// updates
