@@ -51,7 +51,6 @@ fun main() {
 	game.addSystem(GravitySystem())
 	game.addSystem(BookCollectionSystem())
 	game.addSystem(ThrowSystem())
-//	game.addSystem(AirDragSystem())
 	game.addSystem(RotationSystem())
 
 	game.addUiSystem(UiFpsSystem())

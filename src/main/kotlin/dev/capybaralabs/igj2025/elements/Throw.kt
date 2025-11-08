@@ -29,26 +29,6 @@ class ThrowSystem : System {
 	}
 }
 
-//class AirDragSystem : System {
-//
-//	override fun update(dt: Float, entity: Entity) {
-//		val thrownComponent = entity.findComponent(ThrownComponent::class)
-//		val direction = entity.findComponent(DirectionComponent::class)
-//		val speedComponent = entity.findComponent(SpeedComponent::class)
-//		if (thrownComponent == null || direction == null || speedComponent == null) {
-//			return
-//		}
-//
-//		var velocity = direction.direction * speedComponent.speed * dt
-//		val drag = 0.1 //must be between 0 and 1!
-//
-//		velocity *= (1 - drag) * dt
-//		speedComponent.speed = velocity.length()
-//		direction.direction = Raylib.vector2Normalize(velocity)
-//	}
-//}
-
-
 object GravityAffectedComponent : Component
 
 class GravitySystem() : System {
