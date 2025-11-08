@@ -46,7 +46,7 @@ class HeldByCatPositionComponent(
 
 
 class BookLaunchComponent(
-	var start: Vector2? = null,
+	var pullStart: Vector2? = null,
 ): Component
 
 class BookLaunchSystem() : System {
@@ -55,14 +55,15 @@ class BookLaunchSystem() : System {
 
 		val book = entity as? BookEntity ?: return
 
-		val throwComponent = book.findComponent(BookLaunchComponent::class) ?: return
+		val launchComponent = book.findComponent(BookLaunchComponent::class) ?: return
 		val heldByCat = book.findComponent(HeldByCatPositionComponent::class) ?: return
 		val cat = book.attachedToCat ?: return
 
 
 		if (isMouseButtonPressed(MOUSE_BUTTON_LEFT))  {
-			throwComponent.start = getMousePosition()
+			launchComponent.pullStart = getMousePosition()
 		}
+		val start = launchComponent.pullStart ?: return
 
 		if (!isMouseButtonReleased(MOUSE_BUTTON_LEFT))  {
 			// TODO: render preview if start != null?
@@ -70,9 +71,8 @@ class BookLaunchSystem() : System {
 		}
 
 		// do the throw!
-		val start = throwComponent.start ?: return
-		val end = getMousePosition()
-		val pullVector = end - start
+		val pullEnd = getMousePosition()
+		val pullVector = pullEnd - start
 
 
 		// unattach from cat
