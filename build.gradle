@@ -45,7 +45,6 @@ runtime {
 
 	jpackage {
 		imageName = 'igj2025'
-		installerName = 'igj2025'
 		appVersion = '1.0.0'
 
 		// Platform-specific options
@@ -53,19 +52,16 @@ runtime {
 
 		if (os.isMacOsX()) {
 			jvmArgs = ['-XstartOnFirstThread']
-			installerType = 'dmg'
 			def macIcon = file('src/main/resources/assets/icon.icns')
 			if (macIcon.exists()) {
 				imageOptions = ['--icon', macIcon.absolutePath]
 			}
 		} else if (os.isWindows()) {
-			installerType = 'msi'
 			def winIcon = file('src/main/resources/assets/icon.ico')
 			if (winIcon.exists()) {
 				imageOptions = ['--icon', winIcon.absolutePath]
 			}
 		} else if (os.isLinux()) {
-			installerType = 'deb'
 			def linuxIcon = file('src/main/resources/assets/icon.png')
 			if (linuxIcon.exists()) {
 				imageOptions = ['--icon', linuxIcon.absolutePath]
