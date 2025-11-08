@@ -8,6 +8,7 @@ import com.raylib.Vector2
 import dev.capybaralabs.igj2025.ecs.Component
 import dev.capybaralabs.igj2025.ecs.Entity
 import dev.capybaralabs.igj2025.ecs.System
+import dev.capybaralabs.igj2025.system.AssetLoader
 import java.util.concurrent.ThreadLocalRandom
 
 
@@ -20,7 +21,7 @@ class BookEntity(
 ): Entity() {
 
 	companion object {
-		private val BOOK_TEXTURE: Texture = loadTexture("assets/image/book_idle.png")
+		private val BOOK_TEXTURE: Texture = AssetLoader.loadTexture("assets/image/book_idle.png")
 	}
 
 	val scale = 0.4

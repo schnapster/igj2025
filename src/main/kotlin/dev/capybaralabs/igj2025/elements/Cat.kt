@@ -7,6 +7,7 @@ import com.raylib.Vector2
 import dev.capybaralabs.igj2025.ecs.Component
 import dev.capybaralabs.igj2025.ecs.Entity
 import dev.capybaralabs.igj2025.ecs.System
+import dev.capybaralabs.igj2025.system.AssetLoader
 import kotlin.math.min
 
 class CatEntity(
@@ -16,12 +17,12 @@ class CatEntity(
 ) : Entity() {
 
 	companion object {
-		val CAT_TEXTURE_DEFAULT: Texture = loadTexture("assets/image/cats_idle_aim.png")
-		val CAT_TEXTURE_WHITE: Texture = loadTexture("assets/image/cat_idle_white.png")
-		val CAT_TEXTURE_ORANGE: Texture = loadTexture("assets/image/cat_idle_red.png")
-		val CAT_TEXTURE_BLUE: Texture = loadTexture("assets/image/cat_idle_blue.png")
-		val CAT_HIGHLIGHT_TEXTURE_STRETCH: Texture = loadTexture("assets/image/cat_highlight_stretched.png")
-		val CAT_HIGHLIGHT_TEXTURE_IDLE: Texture = loadTexture("assets/image/cat_highlight_idle.png")
+		val CAT_TEXTURE_DEFAULT: Texture = AssetLoader.loadTexture("assets/image/cats_idle_aim.png")
+		val CAT_TEXTURE_WHITE: Texture = AssetLoader.loadTexture("assets/image/cat_idle_white.png")
+		val CAT_TEXTURE_ORANGE: Texture = AssetLoader.loadTexture("assets/image/cat_idle_red.png")
+		val CAT_TEXTURE_BLUE: Texture = AssetLoader.loadTexture("assets/image/cat_idle_blue.png")
+		val CAT_HIGHLIGHT_TEXTURE_STRETCH: Texture = AssetLoader.loadTexture("assets/image/cat_highlight_streched.png")
+		val CAT_HIGHLIGHT_TEXTURE_IDLE: Texture = AssetLoader.loadTexture("assets/image/cat_highlight_idle.png")
 	}
 
 	private val scale = 0.3

@@ -4,6 +4,7 @@ import com.raylib.Raylib.*
 import com.raylib.Texture
 import com.raylib.Vector2
 import dev.capybaralabs.igj2025.ecs.Entity
+import dev.capybaralabs.igj2025.system.AssetLoader
 import kotlin.math.min
 
 
@@ -13,7 +14,7 @@ class EnemyEntity(
 	directionAiInput: DirectionAiComponent = DirectionAiComponent(),
 ) : Entity() {
 	companion object {
-		private val ENEMY_TEXTURE: Texture = loadTexture("assets/image/enemy.png")
+		private val ENEMY_TEXTURE: Texture = AssetLoader.loadTexture("assets/image/enemy.png")
 	}
 
 	private val scale = 0.35

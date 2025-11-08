@@ -31,6 +31,8 @@ import dev.capybaralabs.igj2025.elements.TextUiSystem
 import dev.capybaralabs.igj2025.elements.ThrowSystem
 import dev.capybaralabs.igj2025.elements.kvector2
 import dev.capybaralabs.igj2025.elements.ui.StartScreen
+import dev.capybaralabs.igj2025.system.AssetLoader
+
 
 enum class ScreenState() {
 	start,
@@ -137,9 +139,9 @@ fun spawnThreeCatsWasdSwitcherAndBook(scene: Scene) {
 
 
 private val backgroundTextureGame by lazy {
-	loadTexture("assets/image/gj_bg.png")
+	AssetLoader.loadTexture("assets/image/gj_bg.png")
 }
 
 private val backgroundTextureStartScreen by lazy {
-	loadTexture("assets/image/startscreenBG.png")
+	AssetLoader.loadTexture("assets/image/startscreenBG.png")
 }
