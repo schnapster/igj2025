@@ -3,12 +3,15 @@ package dev.capybaralabs.igj2025
 import com.raylib.Raylib.*
 import com.raylib.Raylib.KeyboardKey.*
 import dev.capybaralabs.igj2025.ecs.Game
+import dev.capybaralabs.igj2025.elements.AiInputSystem
 import dev.capybaralabs.igj2025.elements.BookCollectionSystem
 import dev.capybaralabs.igj2025.elements.BookEntity
 import dev.capybaralabs.igj2025.elements.BookLaunchSystem
 import dev.capybaralabs.igj2025.elements.CatEntity
+import dev.capybaralabs.igj2025.elements.DirectionAiComponent
 import dev.capybaralabs.igj2025.elements.DirectionInputComponent
 import dev.capybaralabs.igj2025.elements.DirectionInputSystem
+import dev.capybaralabs.igj2025.elements.EnemyEntity
 import dev.capybaralabs.igj2025.elements.GravitySystem
 import dev.capybaralabs.igj2025.elements.MoveSystem
 import dev.capybaralabs.igj2025.elements.RelationalTextureRenderSystem
@@ -30,6 +33,7 @@ fun main() {
 
 	game.addSystem(MoveSystem())
 	game.addSystem(DirectionInputSystem())
+	game.addSystem(AiInputSystem())
 
 	game.addSystem(RelationalTextureRenderSystem())
 
@@ -87,9 +91,21 @@ fun spawnTwoCatsWasdAndArrowsAndBook(game: Game) {
 	)
 	game.addEntity(arrowCat)
 
-	game.addEntity(BookEntity(wasdCat))
-}
+	var book = BookEntity(wasdCat)
+	game.addEntity(book)
 
+	val allCats = game
+
+	game.addEntity(
+		EnemyEntity(
+			position = kvector2(getScreenWidth() / 5 * 4, getScreenHeight() - 200),
+			directionAiInput = DirectionAiComponent(
+				listOf(wasdCat, arrowCat),
+				book,
+			),
+		),
+	)
+}
 
 private val backgroundTexture by lazy {
 	loadTexture("assets/image/gj_bg.png")

@@ -41,6 +41,12 @@ class DirectionInputComponent(
 	val rightKey: Int = KEY_D,
 ) : Component
 
+class DirectionAiComponent(
+	val players: List<Entity> = listOf(),
+	val targetObject: Entity = Entity(),
+	val simple: Boolean = true,
+) : Component
+
 
 class DirectionInputSystem : System {
 	override fun update(dt: Float, entity: Entity) {
@@ -52,6 +58,66 @@ class DirectionInputSystem : System {
 
 		direction.x = (isKeyDown(input.rightKey).toInt() - isKeyDown(input.leftKey).toInt()).toFloat()
 		direction.y = (isKeyDown(input.downKey).toInt() - isKeyDown(input.upKey).toInt()).toFloat()
+		val normalized = vector2Normalize(direction)
+		direction.x = normalized.x
+		direction.y = normalized.y
+	}
+}
+
+class AiInputSystem : System {
+	override fun update(dt: Float, entity: Entity) {
+		val direction = entity.findComponent(DirectionComponent::class)?.direction
+		val position = entity.findComponent(PositionComponent::class)?.position
+		val players = entity.findComponent(DirectionAiComponent::class)?.players
+		val simple = entity.findComponent(DirectionAiComponent::class)?.simple
+		val targetObject = entity.findComponent(DirectionAiComponent::class)?.targetObject
+
+		if (direction == null || position == null || players == null || targetObject == null || simple == null) {
+			return
+		}
+
+		var targetPosition = Vector2()
+
+		val playerWithTarget = targetObject.findComponent(HeldByCatPositionComponent::class)?.attachedCat()
+
+		// if no player with target go for target directly
+		if (playerWithTarget == null) {
+			val positionOfTarget = targetObject.findComponent(PositionComponent::class)?.position
+			if (positionOfTarget == null) {
+				return
+			}
+			targetPosition = positionOfTarget
+		} else {
+			if (simple) {
+				targetPosition = playerWithTarget.position
+			} else {
+				// prioritize player by distance to main player
+				var targetedPlayersSorted = players.filterNot { playerWithTarget == it }.sortedBy { player ->
+					val playerPosition = player.findComponent(PositionComponent::class)?.position
+					val mainPlayerPosition = playerWithTarget.findComponent(PositionComponent::class)?.position
+
+					vector2Distance(playerPosition, mainPlayerPosition)
+				}
+
+				var shuffleBag = mutableListOf<Entity>()
+				var i = 1
+				for (player in targetedPlayersSorted) {
+					for (j in 0 until i) {
+						shuffleBag.add(player)
+					}
+					i++
+				}
+
+				val targetedPlayer = shuffleBag.random()
+				targetPosition = targetedPlayer.findComponent(PositionComponent::class)?.position ?: targetPosition
+			}
+		}
+
+		val directionX = targetPosition.x - position.x
+		val directionY = targetPosition.y - position.y
+
+		direction.x = directionX
+		direction.y = directionY
 		val normalized = vector2Normalize(direction)
 		direction.x = normalized.x
 		direction.y = normalized.y
