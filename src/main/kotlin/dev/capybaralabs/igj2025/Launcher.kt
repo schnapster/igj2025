@@ -35,9 +35,9 @@ import dev.capybaralabs.igj2025.system.AssetLoader
 
 
 enum class ScreenState() {
-	start,
-	game,
-	end
+	START,
+	GAME,
+	END
 }
 
 fun main() {
@@ -82,25 +82,25 @@ fun main() {
 	startScreen.addEntity(BackgroundEntity(backgroundTextureStartScreen))
 	startScreen.addEntity(StartScreen())
 
-	var screenState = ScreenState.start
+	var screenState = ScreenState.START
 	while (!windowShouldClose()) {
 		// updates
 		val dt = getFrameTime()
 
-		if (screenState == ScreenState.start) {
+		if (screenState == ScreenState.START) {
 			startScreen.update(dt)
 		}
-		if (screenState == ScreenState.game) {
+		if (screenState == ScreenState.GAME) {
 			game.update(dt)
 		}
 
 		//rendering
 		beginDrawing()
 
-		if (screenState == ScreenState.start) {
+		if (screenState == ScreenState.START) {
 			startScreen.render()
 		}
-		if (screenState == ScreenState.game) {
+		if (screenState == ScreenState.GAME) {
 			game.render()
 		}
 
