@@ -15,6 +15,15 @@ repositories {
 
 dependencies {
 	implementation "io.github.electronstudio:jaylib-ffm:$jaylibVersion"
+	implementation "org.xerial:sqlite-jdbc:$sqliteJdbcVersion"
+
+	testImplementation "org.jetbrains.kotlin:kotlin-test-junit5"
+	testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"
+	testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+test {
+	useJUnitPlatform()
 }
 
 application {
