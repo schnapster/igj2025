@@ -10,13 +10,25 @@ class StartScreen() : Entity() {
 	init {
 		addComponent(
 			TextComponent(
-				text = "Test",
-				verticalOrientation = verticalOrientation.CENTER,
-				horizontalOrientation = horizontalOrientation.CENTER,
-				verticalMargin = 0,
-				horizontalMargin = 0,
-				fontSize = 50,
-				color = YELLOW,
+				text = "[ESC]",
+				verticalOrientation = verticalOrientation.BOTTOM,
+				horizontalOrientation = horizontalOrientation.LEFT,
+				verticalMargin = getScreenHeight() / 5,
+				horizontalMargin = getScreenWidth() / 4 + 50,
+				fontSize = 25,
+				color = BROWN,
+			),
+		)
+
+		addComponent(
+			TextComponent(
+				text = "[ENTER]",
+				verticalOrientation = verticalOrientation.BOTTOM,
+				horizontalOrientation = horizontalOrientation.RIGHT,
+				verticalMargin = getScreenHeight() / 4 + 55,
+				horizontalMargin = getScreenWidth() / 5,
+				fontSize = 25,
+				color = BROWN,
 			),
 		)
 	}
