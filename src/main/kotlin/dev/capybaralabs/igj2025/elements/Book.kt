@@ -30,7 +30,7 @@ class BookEntity(
 		addComponent(SimpleWallComponent(((texture.width / 2f) * scale).toFloat()))
 
 
-		addComponent(BookThrowComponent())
+		addComponent(BookLaunchComponent())
 	}
 
 }
@@ -45,18 +45,17 @@ class HeldByCatPositionComponent(
 }
 
 
-
-class BookThrowComponent(
+class BookLaunchComponent(
 	var start: Vector2? = null,
 ): Component
 
-class BookThrowSystem(): System {
+class BookLaunchSystem() : System {
 
 	override fun update(dt: Float, entity: Entity) {
 
 		val book = entity as? BookEntity ?: return
 
-		val throwComponent = book.findComponent(BookThrowComponent::class) ?: return
+		val throwComponent = book.findComponent(BookLaunchComponent::class) ?: return
 		val heldByCat = book.findComponent(HeldByCatPositionComponent::class) ?: return
 		val cat = book.attachedToCat ?: return
 
@@ -73,7 +72,7 @@ class BookThrowSystem(): System {
 		// do the throw!
 		val start = throwComponent.start ?: return
 		val end = getMousePosition()
-		val throwVector = end - start
+		val pullVector = end - start
 
 
 		// unattach from cat
@@ -83,8 +82,8 @@ class BookThrowSystem(): System {
 
 
 		// update speed & direction based on throw vector
-		val speed = (throwVector.x + throwVector.y) / 100
-		val throwDirection = throwVector * -1
+		val speed = (pullVector.x + pullVector.y) / 100
+		val launchDirection = pullVector * -1
 
 		val rotationSpeed = getRandomValue(10, 40).toFloat()
 		val rotationClockwise = ThreadLocalRandom.current().nextBoolean()
@@ -94,8 +93,8 @@ class BookThrowSystem(): System {
 			?.also { it.speed = speed }
 			?: SpeedComponent(speed)
 		val directionComponent = book.findComponent(DirectionComponent::class)
-			?.also { it.direction = throwDirection }
-			?: DirectionComponent(throwDirection)
+			?.also { it.direction = launchDirection }
+			?: DirectionComponent(launchDirection)
 		val rotatingComponent = book.findComponent(RotatingComponent::class)
 			?.also {
 				it.rotationSpeed = rotationSpeed

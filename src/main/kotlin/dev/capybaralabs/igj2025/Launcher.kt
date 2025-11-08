@@ -4,7 +4,7 @@ import com.raylib.Raylib.*
 import com.raylib.Raylib.KeyboardKey.*
 import dev.capybaralabs.igj2025.ecs.Game
 import dev.capybaralabs.igj2025.elements.BookEntity
-import dev.capybaralabs.igj2025.elements.BookThrowSystem
+import dev.capybaralabs.igj2025.elements.BookLaunchSystem
 import dev.capybaralabs.igj2025.elements.CatEntity
 import dev.capybaralabs.igj2025.elements.DirectionInputComponent
 import dev.capybaralabs.igj2025.elements.DirectionInputSystem
@@ -34,7 +34,7 @@ fun main() {
 
 	spawnTwoCatsWasdAndArrowsAndBook(game)
 
-	game.addSystem(BookThrowSystem())
+	game.addSystem(BookLaunchSystem())
 	game.addSystem(GravitySystem())
 	game.addSystem(ThrowSystem())
 //	game.addSystem(AirDragSystem())
