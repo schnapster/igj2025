@@ -7,28 +7,52 @@ import com.raylib.Vector2
 import dev.capybaralabs.igj2025.ecs.Component
 import dev.capybaralabs.igj2025.ecs.Entity
 import dev.capybaralabs.igj2025.ecs.System
+import dev.capybaralabs.igj2025.elements.CatTexturePack.Companion.CAT_DEFAULT
 import dev.capybaralabs.igj2025.system.AssetLoader
 import kotlin.math.min
+
+data class CatTexturePack(
+	val idle: Texture,
+	val stretched: Texture,
+	val idleHighlight: Texture = CAT_HIGHLIGHT_TEXTURE_IDLE,
+	val stretchedHighlight: Texture = CAT_HIGHLIGHT_TEXTURE_STRETCH,
+) {
+
+	companion object {
+		val CAT_IDLE_DEFAULT: Texture = AssetLoader.loadTexture("assets/image/cat_idle_default.png")
+		val CAT_IDLE_WHITE: Texture = AssetLoader.loadTexture("assets/image/cat_idle_white.png")
+		val CAT_IDLE_ORANGE: Texture = AssetLoader.loadTexture("assets/image/cat_idle_red.png")
+		val CAT_IDLE_BLUE: Texture = AssetLoader.loadTexture("assets/image/cat_idle_blue.png")
+
+		val CAT_STRETCH_DEFAULT: Texture = AssetLoader.loadTexture("assets/image/cat_stretched_default.png")
+		val CAT_STRETCH_WHITE: Texture = AssetLoader.loadTexture("assets/image/cat_stretched_white.png")
+		val CAT_STRETCH_ORANGE: Texture = AssetLoader.loadTexture("assets/image/cat_stretched_red.png")
+		val CAT_STRETCH_BLUE: Texture = AssetLoader.loadTexture("assets/image/cat_stretched_blue.png")
+
+		val CAT_HIGHLIGHT_TEXTURE_STRETCH: Texture = AssetLoader.loadTexture("assets/image/cat_highlight_stretched.png")
+		val CAT_HIGHLIGHT_TEXTURE_IDLE: Texture = AssetLoader.loadTexture("assets/image/cat_highlight_idle.png")
+
+
+		val CAT_DEFAULT = CatTexturePack(CAT_IDLE_DEFAULT, CAT_STRETCH_DEFAULT)
+		val CAT_WHITE = CatTexturePack(CAT_IDLE_WHITE, CAT_STRETCH_WHITE)
+		val CAT_ORANGE = CatTexturePack(CAT_IDLE_ORANGE, CAT_STRETCH_ORANGE)
+		val CAT_BLUE = CatTexturePack(CAT_IDLE_BLUE, CAT_STRETCH_BLUE)
+
+		val ALL_CATS = listOf(CAT_DEFAULT, CAT_WHITE, CAT_ORANGE, CAT_BLUE)
+	}
+}
 
 class CatEntity(
 	val position: Vector2 = kvector2(getScreenWidth() / 2, getScreenHeight() - 200),
 	directionInput: DirectionInputComponent = DirectionInputComponent(),
-	val texture: Texture = CAT_TEXTURE_DEFAULT,
+	val texturePack: CatTexturePack = CAT_DEFAULT,
 ) : Entity() {
-
-	companion object {
-		val CAT_TEXTURE_DEFAULT: Texture = AssetLoader.loadTexture("assets/image/cats_idle_aim.png")
-		val CAT_TEXTURE_WHITE: Texture = AssetLoader.loadTexture("assets/image/cat_idle_white.png")
-		val CAT_TEXTURE_ORANGE: Texture = AssetLoader.loadTexture("assets/image/cat_idle_red.png")
-		val CAT_TEXTURE_BLUE: Texture = AssetLoader.loadTexture("assets/image/cat_idle_blue.png")
-
-		val CAT_HIGHLIGHT_TEXTURE_STRETCH: Texture = AssetLoader.loadTexture("assets/image/cat_highlight_stretched.png")
-		val CAT_HIGHLIGHT_TEXTURE_IDLE: Texture = AssetLoader.loadTexture("assets/image/cat_highlight_idle.png")
-	}
 
 	private val scale = 0.3
 
 	init {
+		val texture = texturePack.idle
+
 		//movement
 		addComponent(SimplePositionComponent(position))
 		addComponent(DirectionComponent(kvector2(0, 0)))
@@ -49,7 +73,7 @@ class CatEntity(
 		addComponent(directionInput)
 
 		// rendering
-		addComponent(TextureComponent(texture, CAT_HIGHLIGHT_TEXTURE_IDLE))
+		addComponent(TextureComponent(texture, texturePack.idleHighlight))
 		addComponent(ScaleComponent(scale))
 	}
 
