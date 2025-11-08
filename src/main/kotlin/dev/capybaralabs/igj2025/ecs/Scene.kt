@@ -1,6 +1,6 @@
 package dev.capybaralabs.igj2025.ecs
 
-class Game(
+class Scene(
 	initialEntites: Set<Entity> = setOf(),
 	initialSystems: Set<System> = setOf(),
 	initialUiSystems: Set<System> = setOf(),

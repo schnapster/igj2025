@@ -2,7 +2,7 @@ package dev.capybaralabs.igj2025
 
 import com.raylib.Raylib.*
 import com.raylib.Raylib.KeyboardKey.*
-import dev.capybaralabs.igj2025.ecs.Game
+import dev.capybaralabs.igj2025.ecs.Scene
 import dev.capybaralabs.igj2025.elements.AiInputSystem
 import dev.capybaralabs.igj2025.elements.BookCatchSystem
 import dev.capybaralabs.igj2025.elements.BookCollectionSystem
@@ -35,50 +35,50 @@ fun main() {
 	setTargetFPS(144)
 	initAudioDevice()
 
-	val game = Game()
+	val scene = Scene()
 
-	game.addSystem(MoveSystem())
-	game.addSystem(BorderSystem())
-	game.addSystem(ControlledDirectionInputSystem())
-	game.addSystem(AiInputSystem())
+	scene.addSystem(MoveSystem())
+	scene.addSystem(BorderSystem())
+	scene.addSystem(ControlledDirectionInputSystem())
+	scene.addSystem(AiInputSystem())
 
-	game.addSystem(RelationalTextureRenderSystem())
+	scene.addSystem(RelationalTextureRenderSystem())
 
-	spawnThreeCatsWasdSwitcherAndBook(game)
+	spawnThreeCatsWasdSwitcherAndBook(scene)
 
 //	game.addSystem(BookLaunchSystem())
-	game.addSystem(BookLaunchSystemCatToCat())
-	game.addSystem(BookFlyingSystem())
-	game.addSystem(BookCatchSystem())
+	scene.addSystem(BookLaunchSystemCatToCat())
+	scene.addSystem(BookFlyingSystem())
+	scene.addSystem(BookCatchSystem())
 
-	game.addSystem(GravitySystem())
-	game.addSystem(BookCollectionSystem())
-	game.addSystem(ThrowSystem())
-	game.addSystem(RotationSystem())
+	scene.addSystem(GravitySystem())
+	scene.addSystem(BookCollectionSystem())
+	scene.addSystem(ThrowSystem())
+	scene.addSystem(RotationSystem())
 
-	game.addUiSystem(UiFpsSystem())
+	scene.addUiSystem(UiFpsSystem())
 
 	while (!windowShouldClose()) {
 		// updates
 		val dt = getFrameTime()
-		game.update(dt)
+		scene.update(dt)
 
 		//rendering
 		beginDrawing()
 		renderBackground()
 
-		game.render()
+		scene.render()
 
 		endDrawing()
 	}
 
-	game.close()
+	scene.close()
 	closeAudioDevice()
 	closeWindow()
 }
 
 
-fun spawnTwoCatsWasdAndArrowsAndBook(game: Game) {
+fun spawnTwoCatsWasdAndArrowsAndBook(scene: Scene) {
 	val wasdCat = CatEntity(
 		position = kvector2(getScreenWidth() / 5, getScreenHeight() - 200),
 		directionInput = DirectionInputComponent(
@@ -88,7 +88,7 @@ fun spawnTwoCatsWasdAndArrowsAndBook(game: Game) {
 			KEY_D,
 		),
 	)
-	game.addEntity(wasdCat)
+	scene.addEntity(wasdCat)
 
 	val arrowCat = CatEntity(
 		position = kvector2(getScreenWidth() / 5 * 4, getScreenHeight() - 200),
@@ -99,12 +99,12 @@ fun spawnTwoCatsWasdAndArrowsAndBook(game: Game) {
 			KEY_RIGHT,
 		),
 	)
-	game.addEntity(arrowCat)
+	scene.addEntity(arrowCat)
 
 	val book = BookEntity(wasdCat)
-	game.addEntity(book)
+	scene.addEntity(book)
 
-	game.addEntity(
+	scene.addEntity(
 		EnemyEntity(
 			position = kvector2(getScreenWidth() / 5 * 4, getScreenHeight() - 200),
 			directionAiInput = DirectionAiComponent(
@@ -115,7 +115,7 @@ fun spawnTwoCatsWasdAndArrowsAndBook(game: Game) {
 	)
 }
 
-fun spawnThreeCatsWasdSwitcherAndBook(game: Game) {
+fun spawnThreeCatsWasdSwitcherAndBook(scene: Scene) {
 	val catA = CatEntity(position = kvector2(getScreenWidth() / 5, getScreenHeight() - 200), texture = CAT_TEXTURE_BLUE)
 	val catB = CatEntity(position = kvector2(getScreenWidth() / 5 * 4, getScreenHeight() - 200), texture = CAT_TEXTURE_ORANGE)
 	val catC = CatEntity(position = kvector2(getScreenWidth() / 2, getScreenHeight() / 3 - 200))
@@ -137,7 +137,7 @@ fun spawnThreeCatsWasdSwitcherAndBook(game: Game) {
 			book,
 		),
 	)
-	game.addEntities(*cats.toTypedArray(), book, enemy)
+	scene.addEntities(*cats.toTypedArray(), book, enemy)
 }
 
 
