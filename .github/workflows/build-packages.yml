@@ -11,14 +11,19 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
         include:
           - os: ubuntu-latest
             platform: linux
+            arch: x86_64
           - os: windows-latest
             platform: windows
+            arch: x86_64
+          - os: macos-13
+            platform: macos
+            arch: x86_64
           - os: macos-latest
             platform: macos
+            arch: arm64
 
     runs-on: ${{ matrix.os }}
 
@@ -39,34 +44,41 @@ jobs:
         run: ./gradlew jpackageImage
         shell: bash
 
-      - name: Compress image (Unix)
-        if: runner.os != 'Windows'
+      - name: Compress image (macOS)
+        if: runner.os == 'macOS'
         run: |
           cd build/jpackage
-          tar -czf igj2025-${{ matrix.platform }}.tar.gz igj2025/
+          tar -czf igj2025-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz igj2025.app/
+        shell: bash
+
+      - name: Compress image (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          cd build/jpackage
+          tar -czf igj2025-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz igj2025/
         shell: bash
 
       - name: Compress image (Windows)
         if: runner.os == 'Windows'
         run: |
           cd build/jpackage
-          Compress-Archive -Path igj2025 -DestinationPath igj2025-${{ matrix.platform }}.zip
+          Compress-Archive -Path igj2025 -DestinationPath igj2025-${{ matrix.platform }}-${{ matrix.arch }}.zip
         shell: pwsh
 
       - name: Upload artifact (Unix)
         if: runner.os != 'Windows'
         uses: actions/upload-artifact@v4
         with:
-          name: igj2025-${{ matrix.platform }}
-          path: build/jpackage/igj2025-${{ matrix.platform }}.tar.gz
+          name: igj2025-${{ matrix.platform }}-${{ matrix.arch }}
+          path: build/jpackage/igj2025-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz
           if-no-files-found: error
 
       - name: Upload artifact (Windows)
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v4
         with:
-          name: igj2025-${{ matrix.platform }}
-          path: build/jpackage/igj2025-${{ matrix.platform }}.zip
+          name: igj2025-${{ matrix.platform }}-${{ matrix.arch }}
+          path: build/jpackage/igj2025-${{ matrix.platform }}-${{ matrix.arch }}.zip
           if-no-files-found: error
 
   release:
