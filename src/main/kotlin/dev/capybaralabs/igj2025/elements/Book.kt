@@ -65,15 +65,14 @@ class BookLaunchSystem() : System {
 		}
 		val start = launchComponent.pullStart ?: return
 
-		if (!isMouseButtonReleased(MOUSE_BUTTON_LEFT))  {
-			// TODO: render preview if start != null?
-			return
-		}
-
-		// do the throw!
 		val pullEnd = getMousePosition()
 		val pullVector = pullEnd - start
 
+		if (!isMouseButtonReleased(MOUSE_BUTTON_LEFT))  {
+			// just render a preview, then leave
+			return
+		}
+		// do the throw!
 
 		// unattach from cat
 		book.position.x = heldByCat.position.x
