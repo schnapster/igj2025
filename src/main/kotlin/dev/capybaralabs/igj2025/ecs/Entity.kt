@@ -30,6 +30,12 @@ open class Entity {
 		return findComponents(type).firstOrNull()
 	}
 
+	fun <T : Component> takeComponent(type: KClass<T>): T? {
+		return findComponents(type).firstOrNull()
+			?.also { removeComponent(it) }
+	}
+
+
 	fun <T : Component> findComponents(type: KClass<T>): List<T> {
 		return components.filterIsInstance(type.java)
 	}
