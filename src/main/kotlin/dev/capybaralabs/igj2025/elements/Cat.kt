@@ -17,6 +17,8 @@ class CatEntity(
 		val CAT_TEXTURE_WHITE: Texture = loadTexture("assets/image/cat_idle_white.png")
 		val CAT_TEXTURE_ORANGE: Texture = loadTexture("assets/image/cat_idle_red.png")
 		val CAT_TEXTURE_BLUE: Texture = loadTexture("assets/image/cat_idle_blue.png")
+		val CAT_HIGHLIGHT_TEXTURE_STRETCH: Texture = loadTexture("assets/image/cat_highlight_stretched.png")
+		val CAT_HIGHLIGHT_TEXTURE_IDLE: Texture = loadTexture("assets/image/cat_highlight_idle.png")
 	}
 
 	private val scale = 0.3
@@ -42,7 +44,7 @@ class CatEntity(
 		addComponent(directionInput)
 
 		// rendering
-		addComponent(TextureComponent(texture))
+		addComponent(TextureComponent(texture, CAT_HIGHLIGHT_TEXTURE_IDLE, true))
 		addComponent(ScaleComponent(scale))
 	}
 
