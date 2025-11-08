@@ -29,7 +29,6 @@ test {
 
 application {
 	mainClass = "dev.capybaralabs.igj2025.LauncherKt"
-	applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
 }
 
 run {
