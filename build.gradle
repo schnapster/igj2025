@@ -32,15 +32,6 @@ application {
 	applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
 }
 
-distributions {
-	main {
-		contents {
-			// TODO this doesnt work. figure out how to include assets so that raylib can load it
-			from "src/main/resources/assets"
-		}
-	}
-}
-
 run {
 	if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
 		jvmArgs += "-XstartOnFirstThread"
