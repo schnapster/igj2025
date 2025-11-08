@@ -3,6 +3,7 @@ package dev.capybaralabs.igj2025
 import com.raylib.Raylib.*
 import com.raylib.Raylib.KeyboardKey.*
 import dev.capybaralabs.igj2025.ecs.Game
+import dev.capybaralabs.igj2025.elements.BookCollectionSystem
 import dev.capybaralabs.igj2025.elements.BookEntity
 import dev.capybaralabs.igj2025.elements.BookLaunchSystem
 import dev.capybaralabs.igj2025.elements.CatEntity
@@ -36,6 +37,7 @@ fun main() {
 
 	game.addSystem(BookLaunchSystem())
 	game.addSystem(GravitySystem())
+	game.addSystem(BookCollectionSystem())
 	game.addSystem(ThrowSystem())
 //	game.addSystem(AirDragSystem())
 	game.addSystem(RotationSystem())

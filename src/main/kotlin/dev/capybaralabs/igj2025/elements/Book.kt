@@ -11,6 +11,7 @@ import java.util.concurrent.ThreadLocalRandom
 
 class BookEntity(
 	var attachedToCat: CatEntity? = null,
+	var onGround: Boolean = false,
 	val position: Vector2 = kvector2(getScreenWidth() / 2, getScreenHeight() - 200),
 ): Entity() {
 
@@ -44,13 +45,11 @@ class HeldByCatPositionComponent(
 		get() = attachedCat()?.position?.let { it + kvector2(0, -100) } ?: bookPosition
 }
 
-
 class BookLaunchComponent(
 	var pullStart: Vector2? = null,
 ): Component
 
 class BookLaunchSystem() : System {
-
 	override fun update(dt: Float, entity: Entity) {
 
 		val book = entity as? BookEntity ?: return
@@ -106,6 +105,7 @@ class BookLaunchSystem() : System {
 		val thrownComponent = ThrownComponent(cat.floor()) {
 			rotatingComponent.paused = true
 			speedComponent.speed = 0f
+			book.onGround = true
 		}
 
 		book.addComponents(
