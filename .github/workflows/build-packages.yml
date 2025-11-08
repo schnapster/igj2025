@@ -39,8 +39,15 @@ jobs:
         run: ./gradlew jpackageImage
         shell: bash
 
-      - name: Compress image (Unix)
-        if: runner.os != 'Windows'
+      - name: Compress image (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          cd build/jpackage
+          tar -czf igj2025-${{ matrix.platform }}.tar.gz igj2025.app/
+        shell: bash
+
+      - name: Compress image (Linux)
+        if: runner.os == 'Linux'
         run: |
           cd build/jpackage
           tar -czf igj2025-${{ matrix.platform }}.tar.gz igj2025/
