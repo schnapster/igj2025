@@ -41,12 +41,15 @@ enum class ScreenState() {
 }
 
 fun main() {
-	val monitor = getCurrentMonitor()
-	val monitorHeight = getMonitorHeight(monitor)
-	val monitorWidth = getMonitorWidth(monitor)
-	initWindow(monitorWidth, monitorHeight, "Henlo!")
+//	setConfigFlags(FLAG_WINDOW_RESIZABLE)
+	// getting the monitor is BROKEN on both Macs :/
+	// so we cannot dynamically scale the size
+//	val monitor = getCurrentMonitor()
+//	val monitorHeight = getMonitorHeight(monitor)
+//	val monitorWidth = getMonitorWidth(monitor)
+	initWindow(1200, 900, "Henlo!")
 //	toggleFullscreen()
-	toggleBorderlessWindowed()
+//	toggleBorderlessWindowed()
 	setExitKey(KEY_ESCAPE)
 	setTargetFPS(144)
 	initAudioDevice()
