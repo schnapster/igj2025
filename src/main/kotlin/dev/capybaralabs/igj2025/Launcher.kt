@@ -41,9 +41,12 @@ enum class ScreenState() {
 }
 
 fun main() {
-	initWindow(1200, 900, "Henlo!")
+	val monitor = getCurrentMonitor()
+	val monitorHeight = getMonitorHeight(monitor)
+	val monitorWidth = getMonitorWidth(monitor)
+	initWindow(monitorWidth, monitorHeight, "Henlo!")
 //	toggleFullscreen()
-//	toggleBorderlessWindowed()
+	toggleBorderlessWindowed()
 	setExitKey(KEY_ESCAPE)
 	setTargetFPS(144)
 	initAudioDevice()
