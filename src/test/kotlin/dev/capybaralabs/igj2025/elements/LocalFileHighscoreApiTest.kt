@@ -40,7 +40,7 @@ class LocalFileHighscoreApiTest {
 		val highscore = Highscore(
 			score = 100.5f,
 			name = "TestPlayer",
-			ts = Instant.now()
+			ts = Instant.now(),
 		)
 
 		api.addHighscore(highscore)

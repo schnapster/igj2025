@@ -4,6 +4,8 @@ import com.raylib.Raylib.*
 import com.raylib.Raylib.KeyboardKey.*
 import dev.capybaralabs.igj2025.ecs.Scene
 import dev.capybaralabs.igj2025.elements.AiInputSystem
+import dev.capybaralabs.igj2025.elements.BackgroundEntity
+import dev.capybaralabs.igj2025.elements.BackgroundRenderSystem
 import dev.capybaralabs.igj2025.elements.BookCatchSystem
 import dev.capybaralabs.igj2025.elements.BookCollectionSystem
 import dev.capybaralabs.igj2025.elements.BookEntity
@@ -25,9 +27,16 @@ import dev.capybaralabs.igj2025.elements.MoveSystem
 import dev.capybaralabs.igj2025.elements.RelationalTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RotationSystem
 import dev.capybaralabs.igj2025.elements.ScoreUiSystem
+import dev.capybaralabs.igj2025.elements.TextUiSystem
 import dev.capybaralabs.igj2025.elements.ThrowSystem
 import dev.capybaralabs.igj2025.elements.kvector2
-import kotlin.math.max
+import dev.capybaralabs.igj2025.elements.ui.StartScreen
+
+enum class ScreenState() {
+	start,
+	game,
+	end
+}
 
 fun main() {
 	initWindow(1200, 900, "Henlo!")
@@ -44,6 +53,8 @@ fun main() {
 	game.addSystem(ControlledDirectionInputSystem())
 	game.addSystem(AiInputSystem())
 
+	game.addSystem(BackgroundRenderSystem())
+	game.addEntity(BackgroundEntity(backgroundTextureGame))
 	game.addSystem(RelationalTextureRenderSystem())
 
 	spawnThreeCatsWasdSwitcherAndBook(game)
@@ -62,16 +73,34 @@ fun main() {
 	game.addUiSystem(FpsUiSystem())
 	game.addUiSystem(ScoreUiSystem())
 
+	val startScreen = Scene()
+	startScreen.addSystem(BackgroundRenderSystem())
+	startScreen.addUiSystem(TextUiSystem())
+
+	startScreen.addEntity(BackgroundEntity(backgroundTextureStartScreen))
+	startScreen.addEntity(StartScreen())
+
+	var screenState = ScreenState.start
 	while (!windowShouldClose()) {
 		// updates
 		val dt = getFrameTime()
-		game.update(dt)
+
+		if (screenState == ScreenState.start) {
+			startScreen.update(dt)
+		}
+		if (screenState == ScreenState.game) {
+			game.update(dt)
+		}
 
 		//rendering
 		beginDrawing()
-		renderBackground()
 
-		game.render()
+		if (screenState == ScreenState.start) {
+			startScreen.render()
+		}
+		if (screenState == ScreenState.game) {
+			game.render()
+		}
 
 		endDrawing()
 	}
@@ -107,18 +136,10 @@ fun spawnThreeCatsWasdSwitcherAndBook(scene: Scene) {
 }
 
 
-private val backgroundTexture by lazy {
+private val backgroundTextureGame by lazy {
 	loadTexture("assets/image/gj_bg.png")
 }
-fun renderBackground() {
-	drawTextureEx(
-		backgroundTexture,
-		kvector2(0f, 0f),
-		0f,
-		max(
-			getScreenWidth().toFloat() / backgroundTexture.width,
-			getScreenHeight().toFloat() / backgroundTexture.height,
-		),
-		RAYWHITE,
-	)
+
+private val backgroundTextureStartScreen by lazy {
+	loadTexture("assets/image/startscreenBG.png")
 }
