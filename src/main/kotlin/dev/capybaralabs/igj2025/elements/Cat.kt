@@ -47,4 +47,8 @@ class CatEntity(
 	fun floor(): Float {
 		return (position.y + (CAT_TEXTURE.height / 2f) * scale).toFloat()
 	}
+
+	fun handsPosition(): Vector2 {
+		return position + kvector2(0, -100)
+	}
 }

@@ -42,7 +42,7 @@ class HeldByCatPositionComponent(
 	val bookPosition: Vector2,
 ) : PositionComponent {
 	override val position: Vector2
-		get() = attachedCat()?.position?.let { it + kvector2(0, -100) } ?: bookPosition
+		get() = attachedCat()?.handsPosition() ?: bookPosition
 }
 
 class BookLaunchComponent(
