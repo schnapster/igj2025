@@ -67,6 +67,8 @@ class MoveSystem : System {
 		if (position == null || direction == null || speed == null) {
 			return
 		}
+		val normalizedDirection = vector2Normalize(direction)
+
 		var borderTop = 0f;
 		var borderBottom = getScreenHeight().toFloat();
 		var borderLeft = 0f;
@@ -88,8 +90,8 @@ class MoveSystem : System {
 
 		}
 
-		var newPositionX = position.x + direction.x * speed * dt
-		var newPositionY = position.y + direction.y * speed * dt
+		var newPositionX = position.x + normalizedDirection.x * speed * dt
+		var newPositionY = position.y + normalizedDirection.y * speed * dt
 
 		if (newPositionX < borderLeft) {
 			newPositionX = borderLeft;
