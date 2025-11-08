@@ -14,8 +14,6 @@ import dev.capybaralabs.igj2025.elements.BookLaunchSystemCatToCat
 import dev.capybaralabs.igj2025.elements.BorderSystem
 import dev.capybaralabs.igj2025.elements.CatEntity
 import dev.capybaralabs.igj2025.elements.CatTexturePack.Companion.ALL_CATS
-import dev.capybaralabs.igj2025.elements.CatEntity.Companion.CAT_TEXTURE_BLUE
-import dev.capybaralabs.igj2025.elements.CatEntity.Companion.CAT_TEXTURE_ORANGE
 import dev.capybaralabs.igj2025.elements.CatchBookEnemySystem
 import dev.capybaralabs.igj2025.elements.ControlledDirectionInputComponent
 import dev.capybaralabs.igj2025.elements.ControlledDirectionInputSystem
