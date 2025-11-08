@@ -34,7 +34,7 @@ class RelationalTextureRenderSystem : System {
 		val textureCenter = texture.size() / 2f * scale
 
 		val highlight = entity.findComponent(TextureComponent::class)?.highlight
-		val shouldHighlight = entity.hasComponent(FocusedCatComponent::class)
+		val shouldHighlight = entity.hasComponent(FocusedCatComponent::class) || entity.hasComponent(CatchBookEnemyComponent::class)
 		if (highlight != null && shouldHighlight) {
 			drawTexturePro(highlight, textureRect, targetRect, textureCenter, rotation, WHITE)
 		}

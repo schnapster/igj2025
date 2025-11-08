@@ -15,6 +15,7 @@ import dev.capybaralabs.igj2025.elements.BorderSystem
 import dev.capybaralabs.igj2025.elements.CatEntity
 import dev.capybaralabs.igj2025.elements.CatEntity.Companion.CAT_TEXTURE_BLUE
 import dev.capybaralabs.igj2025.elements.CatEntity.Companion.CAT_TEXTURE_ORANGE
+import dev.capybaralabs.igj2025.elements.CatchBookEnemySystem
 import dev.capybaralabs.igj2025.elements.ControlledDirectionInputComponent
 import dev.capybaralabs.igj2025.elements.ControlledDirectionInputSystem
 import dev.capybaralabs.igj2025.elements.DirectionAiComponent
@@ -39,6 +40,8 @@ enum class ScreenState() {
 	GAME,
 	END
 }
+
+var screenState = ScreenState.START
 
 fun main() {
 //	setConfigFlags(FLAG_WINDOW_RESIZABLE)
@@ -71,6 +74,7 @@ fun main() {
 	game.addSystem(BookLaunchSystemCatToCat())
 	game.addSystem(BookFlyingSystem())
 	game.addSystem(BookCatchSystem())
+	game.addSystem(CatchBookEnemySystem())
 	game.addSystem(FocusCatSystem())
 
 	game.addSystem(GravitySystem())
@@ -88,7 +92,6 @@ fun main() {
 	startScreen.addEntity(BackgroundEntity(backgroundTextureStartScreen))
 	startScreen.addEntity(StartScreen())
 
-	var screenState = ScreenState.START
 	while (!windowShouldClose()) {
 
 		// state changes
@@ -145,8 +148,13 @@ fun spawnThreeCatsWasdSwitcherAndBook(scene: Scene) {
 			cats,
 			book,
 		),
+		handleOnBookCatch = { onBookCatch() },
 	)
 	scene.addEntities(*cats.toTypedArray(), book, enemy)
+}
+
+private fun onBookCatch() {
+	screenState = ScreenState.START
 }
 
 
