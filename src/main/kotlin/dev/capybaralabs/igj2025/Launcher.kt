@@ -35,44 +35,44 @@ fun main() {
 	setTargetFPS(144)
 	initAudioDevice()
 
-	val scene = Scene()
+	val game = Scene()
 
-	scene.addSystem(MoveSystem())
-	scene.addSystem(BorderSystem())
-	scene.addSystem(ControlledDirectionInputSystem())
-	scene.addSystem(AiInputSystem())
+	game.addSystem(MoveSystem())
+	game.addSystem(BorderSystem())
+	game.addSystem(ControlledDirectionInputSystem())
+	game.addSystem(AiInputSystem())
 
-	scene.addSystem(RelationalTextureRenderSystem())
+	game.addSystem(RelationalTextureRenderSystem())
 
-	spawnThreeCatsWasdSwitcherAndBook(scene)
+	spawnThreeCatsWasdSwitcherAndBook(game)
 
 //	game.addSystem(BookLaunchSystem())
-	scene.addSystem(BookLaunchSystemCatToCat())
-	scene.addSystem(BookFlyingSystem())
-	scene.addSystem(BookCatchSystem())
+	game.addSystem(BookLaunchSystemCatToCat())
+	game.addSystem(BookFlyingSystem())
+	game.addSystem(BookCatchSystem())
 
-	scene.addSystem(GravitySystem())
-	scene.addSystem(BookCollectionSystem())
-	scene.addSystem(ThrowSystem())
-	scene.addSystem(RotationSystem())
+	game.addSystem(GravitySystem())
+	game.addSystem(BookCollectionSystem())
+	game.addSystem(ThrowSystem())
+	game.addSystem(RotationSystem())
 
-	scene.addUiSystem(UiFpsSystem())
+	game.addUiSystem(UiFpsSystem())
 
 	while (!windowShouldClose()) {
 		// updates
 		val dt = getFrameTime()
-		scene.update(dt)
+		game.update(dt)
 
 		//rendering
 		beginDrawing()
 		renderBackground()
 
-		scene.render()
+		game.render()
 
 		endDrawing()
 	}
 
-	scene.close()
+	game.close()
 	closeAudioDevice()
 	closeWindow()
 }
