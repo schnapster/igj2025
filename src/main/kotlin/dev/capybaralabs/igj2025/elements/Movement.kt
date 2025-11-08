@@ -126,17 +126,17 @@ class AiInputSystem : System {
 				targetPosition = playerWithTarget.position
 			} else {
 				// prioritize player by distance to main player
-				var targetedPlayersSorted = players.filterNot { playerWithTarget == it }.sortedBy { player ->
+				val targetedPlayersSorted = players.filterNot { playerWithTarget == it }.sortedBy { player ->
 					val playerPosition = player.findComponent(PositionComponent::class)?.position
 					val mainPlayerPosition = playerWithTarget.findComponent(PositionComponent::class)?.position
 
 					vector2Distance(playerPosition, mainPlayerPosition)
 				}
 
-				var shuffleBag = mutableListOf<Entity>()
+				val shuffleBag = mutableListOf<Entity>()
 				var i = 1
 				for (player in targetedPlayersSorted) {
-					for (j in 0 until i) {
+					repeat(i) {
 						shuffleBag.add(player)
 					}
 					i++
@@ -208,16 +208,16 @@ class BorderSystem : System {
 		borderRight -= marginRight
 
 		if (position.x < borderLeft) {
-			position.x = borderLeft;
+			position.x = borderLeft
 		}
 		if (position.x > borderRight) {
-			position.x = borderRight;
+			position.x = borderRight
 		}
 		if (position.y < borderTop) {
-			position.y = borderTop;
+			position.y = borderTop
 		}
 		if (position.y > borderBottom) {
-			position.y = borderBottom;
+			position.y = borderBottom
 		}
 	}
 }

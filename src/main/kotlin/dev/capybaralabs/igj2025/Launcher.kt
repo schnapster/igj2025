@@ -79,44 +79,6 @@ fun main() {
 	closeWindow()
 }
 
-
-fun spawnTwoCatsWasdAndArrowsAndBook(scene: Scene) {
-	val wasdCat = CatEntity(
-		position = kvector2(getScreenWidth() / 5, getScreenHeight() - 200),
-		directionInput = DirectionInputComponent(
-			KEY_W,
-			KEY_S,
-			KEY_A,
-			KEY_D,
-		),
-	)
-	scene.addEntity(wasdCat)
-
-	val arrowCat = CatEntity(
-		position = kvector2(getScreenWidth() / 5 * 4, getScreenHeight() - 200),
-		directionInput = DirectionInputComponent(
-			KEY_UP,
-			KEY_DOWN,
-			KEY_LEFT,
-			KEY_RIGHT,
-		),
-	)
-	scene.addEntity(arrowCat)
-
-	val book = BookEntity(wasdCat)
-	scene.addEntity(book)
-
-	scene.addEntity(
-		EnemyEntity(
-			position = kvector2(getScreenWidth() / 5 * 4, getScreenHeight() - 200),
-			directionAiInput = DirectionAiComponent(
-				setOf(wasdCat, arrowCat),
-				book,
-			),
-		),
-	)
-}
-
 fun spawnThreeCatsWasdSwitcherAndBook(scene: Scene) {
 	val catA = CatEntity(position = kvector2(getScreenWidth() / 5, getScreenHeight() - 200), texture = CAT_TEXTURE_BLUE)
 	val catB = CatEntity(position = kvector2(getScreenWidth() / 5 * 4, getScreenHeight() - 200), texture = CAT_TEXTURE_ORANGE)

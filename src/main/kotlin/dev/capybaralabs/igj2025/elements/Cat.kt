@@ -51,10 +51,6 @@ class CatEntity(
 		addComponent(ScaleComponent(scale))
 	}
 
-	fun floor(): Float {
-		return (position.y + (texture.height / 2f) * scale).toFloat()
-	}
-
 	fun handsPosition(): Vector2 {
 		return position + kvector2(0, -100)
 	}

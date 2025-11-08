@@ -18,7 +18,7 @@ open class Entity {
 	}
 
 	fun <T : Component> removeAllComponentsOfType(type: KClass<T>) {
-		var componentsOfType = findComponents(type)
+		val componentsOfType = findComponents(type)
 		this.components.removeAll(componentsOfType.toSet())
 	}
 

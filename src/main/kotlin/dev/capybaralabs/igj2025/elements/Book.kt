@@ -9,7 +9,6 @@ import dev.capybaralabs.igj2025.ecs.Component
 import dev.capybaralabs.igj2025.ecs.Entity
 import dev.capybaralabs.igj2025.ecs.System
 import java.util.concurrent.ThreadLocalRandom
-import kotlin.math.abs
 
 
 class BookEntity(
@@ -53,79 +52,6 @@ class HeldByCatPositionComponent(
 	override val position: Vector2
 		get() = attachedCat()?.handsPosition() ?: bookPosition
 }
-
-class BookLaunchComponent(
-	var pullStart: Vector2? = null,
-): Component
-
-class BookLaunchSystem() : System {
-	override fun update(dt: Float, entity: Entity) {
-
-		val book = entity as? BookEntity ?: return
-
-		val launchComponent = book.findComponent(BookLaunchComponent::class) ?: return
-		val heldByCat = book.findComponent(HeldByCatPositionComponent::class) ?: return
-		val cat = book.attachedToCat ?: return
-
-
-		if (isMouseButtonPressed(MOUSE_BUTTON_LEFT))  {
-			launchComponent.pullStart = getMousePosition()
-		}
-		val start = launchComponent.pullStart ?: return
-
-		val pullEnd = getMousePosition()
-		val pullVector = pullEnd - start
-
-		if (!isMouseButtonReleased(MOUSE_BUTTON_LEFT))  {
-			// just render a preview, then leave
-			return
-		}
-		// do the throw!
-
-		// unattach from cat
-		book.position.x = heldByCat.position.x
-		book.position.y = heldByCat.position.y
-		book.attachedToCat = null
-
-
-		// update speed & direction based on throw vector
-		val speed = (abs(pullVector.x) + abs(pullVector.y)) * 2
-		val launchDirection = pullVector * -1
-
-		val rotationSpeed = getRandomValue(10, 40).toFloat()
-		val rotationClockwise = ThreadLocalRandom.current().nextBoolean()
-
-
-		val speedComponent = book.findComponent(SpeedComponent::class)
-			?.also { it.speed = speed }
-			?: SpeedComponent(speed)
-		val directionComponent = book.findComponent(DirectionComponent::class)
-			?.also { it.direction = launchDirection }
-			?: DirectionComponent(launchDirection)
-		val rotatingComponent = book.findComponent(RotatingComponent::class)
-			?.also {
-				it.rotationSpeed = rotationSpeed
-				it.clockwise = rotationClockwise
-				it.paused = false
-			}
-			?: RotatingComponent(rotationSpeed, rotationClockwise)
-
-		val thrownComponent = ThrownComponent(cat.floor()) {
-			rotatingComponent.paused = true
-			speedComponent.speed = 0f
-			book.onGround = true
-		}
-
-		book.addComponents(
-			speedComponent,
-			directionComponent,
-			GravityAffectedComponent,
-			rotatingComponent,
-			thrownComponent,
-		)
-	}
-}
-
 
 class FlyingComponent(
 	val targetCat: CatEntity,

@@ -9,7 +9,7 @@ import kotlin.math.min
 
 class EnemyEntity(
 	val position: Vector2 = kvector2(getScreenWidth() / 2, getScreenHeight() - 200),
-	val initialSpeed: Float = 200f,
+	initialSpeed: Float = 200f,
 	directionAiInput: DirectionAiComponent = DirectionAiComponent(),
 ) : Entity() {
 	companion object {
@@ -43,9 +43,5 @@ class EnemyEntity(
 		// rendering
 		addComponent(TextureComponent(texture))
 		addComponent(ScaleComponent(scale))
-	}
-
-	fun floor(): Float {
-		return (position.y + (ENEMY_TEXTURE.height / 2f) * scale).toFloat()
 	}
 }
