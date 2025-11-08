@@ -23,6 +23,7 @@ import dev.capybaralabs.igj2025.elements.FocusCatSystem
 import dev.capybaralabs.igj2025.elements.FpsUiSystem
 import dev.capybaralabs.igj2025.elements.GravitySystem
 import dev.capybaralabs.igj2025.elements.MoveSystem
+import dev.capybaralabs.igj2025.elements.RelationalCatTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RelationalTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RotationSystem
 import dev.capybaralabs.igj2025.elements.ScoreUiSystem
@@ -63,6 +64,7 @@ fun main() {
 	game.addSystem(BackgroundRenderSystem())
 	game.addEntity(BackgroundEntity(backgroundTextureGame))
 	game.addSystem(RelationalTextureRenderSystem())
+	game.addSystem(RelationalCatTextureRenderSystem())
 
 	spawnThreeCatsWasdSwitcherAndBook(game)
 

@@ -73,7 +73,6 @@ class CatEntity(
 		addComponent(directionInput)
 
 		// rendering
-		addComponent(TextureComponent(texture, texturePack.idleHighlight))
 		addComponent(ScaleComponent(scale))
 	}
 
