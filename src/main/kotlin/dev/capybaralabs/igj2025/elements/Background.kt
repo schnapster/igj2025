@@ -5,7 +5,7 @@ import com.raylib.Texture
 import dev.capybaralabs.igj2025.ecs.Component
 import dev.capybaralabs.igj2025.ecs.Entity
 import dev.capybaralabs.igj2025.ecs.System
-import kotlin.math.max
+import kotlin.math.min
 
 class BackgroundComponent(
 	val texture: Texture,
@@ -22,7 +22,7 @@ class BackgroundRenderSystem : System {
 				background.texture,
 				kvector2(0f, 0f),
 				0f,
-				max(
+				min(
 					getScreenWidth().toFloat() / background.texture.width,
 					getScreenHeight().toFloat() / background.texture.height,
 				),
