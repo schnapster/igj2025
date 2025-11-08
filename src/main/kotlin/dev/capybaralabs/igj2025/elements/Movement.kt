@@ -32,14 +32,61 @@ class DirectionInputComponent(
 	val rightKey: Int = KEY_D,
 ) : Component
 
+class ControlledDirectionInputComponent(
+	val group: Set<Entity>,
+	val current: () -> Entity,
+) : Component
+
+
 class DirectionAiComponent(
-	val players: List<Entity> = listOf(),
+	val players: Set<Entity> = setOf(),
 	val targetObject: Entity = Entity(),
 	val simple: Boolean = true,
 ) : Component
 
 
-class DirectionInputSystem : System {
+abstract class DirectionInputSystem : System {
+	protected fun updateDirection(direction: Vector2, input: DirectionInputComponent) {
+		direction.x = (isKeyDown(input.rightKey).toInt() - isKeyDown(input.leftKey).toInt()).toFloat()
+		direction.y = (isKeyDown(input.downKey).toInt() - isKeyDown(input.upKey).toInt()).toFloat()
+		val normalized = vector2Normalize(direction)
+		direction.x = normalized.x
+		direction.y = normalized.y
+	}
+}
+
+// uses a proxy via ControlledDirectionInputComponent to find the controlled entity
+class ControlledDirectionInputSystem : DirectionInputSystem() {
+	override fun update(dt: Float, entities: Set<Entity>) {
+		for (entity in entities) {
+			update(dt, entity)
+		}
+	}
+
+	override fun update(dt: Float, entity: Entity) {
+		val controlComponent = entity.findComponent(ControlledDirectionInputComponent::class)
+		val direction = controlComponent?.current?.invoke()
+			?.findComponent(DirectionComponent::class)?.direction
+		val input = entity.findComponent(DirectionInputComponent::class)
+
+		if (controlComponent == null || direction == null || input == null) {
+			return
+		}
+
+		// reset direction for the entire group
+		for (e in controlComponent.group) {
+			e.findComponent(DirectionComponent::class)?.direction?.let {
+				it.x = 0f
+				it.y = 0f
+			}
+		}
+		// set direction for the controlled entity
+		updateDirection(direction, input)
+	}
+}
+
+// directly updates direction on the entity that can the input
+class DirectDirectionInputSystem : DirectionInputSystem() {
 	override fun update(dt: Float, entity: Entity) {
 		val direction = entity.findComponent(DirectionComponent::class)?.direction
 		val input = entity.findComponent(DirectionInputComponent::class)
@@ -47,11 +94,7 @@ class DirectionInputSystem : System {
 			return
 		}
 
-		direction.x = (isKeyDown(input.rightKey).toInt() - isKeyDown(input.leftKey).toInt()).toFloat()
-		direction.y = (isKeyDown(input.downKey).toInt() - isKeyDown(input.upKey).toInt()).toFloat()
-		val normalized = vector2Normalize(direction)
-		direction.x = normalized.x
-		direction.y = normalized.y
+		updateDirection(direction, input)
 	}
 }
 

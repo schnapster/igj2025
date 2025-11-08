@@ -11,6 +11,7 @@ import dev.capybaralabs.igj2025.ecs.System
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.math.abs
 
+
 class BookEntity(
 	var attachedToCat: CatEntity? = null,
 	var targetCat: CatEntity? = null,

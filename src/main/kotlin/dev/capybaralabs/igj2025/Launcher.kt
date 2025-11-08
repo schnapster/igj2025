@@ -11,9 +11,10 @@ import dev.capybaralabs.igj2025.elements.BookFlyingSystem
 import dev.capybaralabs.igj2025.elements.BookLaunchSystemCatToCat
 import dev.capybaralabs.igj2025.elements.BorderSystem
 import dev.capybaralabs.igj2025.elements.CatEntity
+import dev.capybaralabs.igj2025.elements.ControlledDirectionInputComponent
+import dev.capybaralabs.igj2025.elements.ControlledDirectionInputSystem
 import dev.capybaralabs.igj2025.elements.DirectionAiComponent
 import dev.capybaralabs.igj2025.elements.DirectionInputComponent
-import dev.capybaralabs.igj2025.elements.DirectionInputSystem
 import dev.capybaralabs.igj2025.elements.EnemyEntity
 import dev.capybaralabs.igj2025.elements.GravitySystem
 import dev.capybaralabs.igj2025.elements.MoveSystem
@@ -36,7 +37,7 @@ fun main() {
 
 	game.addSystem(MoveSystem())
 	game.addSystem(BorderSystem())
-	game.addSystem(DirectionInputSystem())
+	game.addSystem(ControlledDirectionInputSystem())
 	game.addSystem(AiInputSystem())
 
 	game.addSystem(RelationalTextureRenderSystem())
@@ -98,16 +99,14 @@ fun spawnTwoCatsWasdAndArrowsAndBook(game: Game) {
 	)
 	game.addEntity(arrowCat)
 
-	var book = BookEntity(wasdCat)
+	val book = BookEntity(wasdCat)
 	game.addEntity(book)
-
-	val allCats = game
 
 	game.addEntity(
 		EnemyEntity(
 			position = kvector2(getScreenWidth() / 5 * 4, getScreenHeight() - 200),
 			directionAiInput = DirectionAiComponent(
-				listOf(wasdCat, arrowCat),
+				setOf(wasdCat, arrowCat),
 				book,
 			),
 		),
@@ -119,16 +118,24 @@ fun spawnThreeCatsWasdSwitcherAndBook(game: Game) {
 	val catB = CatEntity(position = kvector2(getScreenWidth() / 5 * 4, getScreenHeight() - 200))
 	val catC = CatEntity(position = kvector2(getScreenWidth() / 2, getScreenHeight() / 3 - 200))
 
+	val cats = setOf(catA, catB, catC)
+
 	val book = BookEntity(catA)
+
+	val controller = ControlledDirectionInputComponent(cats) {
+		book.attachedToCat ?: book.targetCat ?: catA
+	}
+	book.addComponent(controller)
+	book.addComponent(DirectionInputComponent())
 
 	val enemy = EnemyEntity(
 		position = kvector2(getScreenWidth() / 5 * 4, getScreenHeight() - 200),
 		directionAiInput = DirectionAiComponent(
-			listOf(catA, catB, catC),
+			cats,
 			book,
 		),
 	)
-	game.addEntities(catA, catB, catC, book, enemy)
+	game.addEntities(*cats.toTypedArray(), book, enemy)
 }
 
 
