@@ -21,7 +21,8 @@ class CatEntity(
 		val CAT_TEXTURE_WHITE: Texture = AssetLoader.loadTexture("assets/image/cat_idle_white.png")
 		val CAT_TEXTURE_ORANGE: Texture = AssetLoader.loadTexture("assets/image/cat_idle_red.png")
 		val CAT_TEXTURE_BLUE: Texture = AssetLoader.loadTexture("assets/image/cat_idle_blue.png")
-		val CAT_HIGHLIGHT_TEXTURE_STRETCH: Texture = AssetLoader.loadTexture("assets/image/cat_highlight_streched.png")
+
+		val CAT_HIGHLIGHT_TEXTURE_STRETCH: Texture = AssetLoader.loadTexture("assets/image/cat_highlight_stretched.png")
 		val CAT_HIGHLIGHT_TEXTURE_IDLE: Texture = AssetLoader.loadTexture("assets/image/cat_highlight_idle.png")
 	}
 
