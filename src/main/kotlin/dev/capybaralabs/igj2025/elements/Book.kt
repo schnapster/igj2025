@@ -13,7 +13,8 @@ import kotlin.math.abs
 
 
 class BookEntity(
-	var attachedToCat: CatEntity? = null,
+	val defaultCat: CatEntity, // fallback cat for operations that require a cat
+	var attachedToCat: CatEntity? = defaultCat,
 	var targetCat: CatEntity? = null,
 	var onGround: Boolean = false,
 	val position: Vector2 = kvector2(getScreenWidth() / 2, getScreenHeight() - 200),
@@ -37,6 +38,10 @@ class BookEntity(
 
 	fun width(): Float {
 		return (BOOK_TEXTURE.width * scale).toFloat()
+	}
+
+	fun controlledCat(): CatEntity {
+		return attachedToCat ?: targetCat ?: defaultCat
 	}
 }
 
@@ -152,7 +157,7 @@ class BookLaunchSystemCatToCat() : System {
 		book.position.x = attachedCat.handsPosition().x
 		book.position.y = attachedCat.handsPosition().y
 		book.attachedToCat = null
-		val targetCat = cats.filter { it != attachedCat }.random()
+		val targetCat = cats.first { it.hasComponent(FocusedCatComponent::class) }
 		book.targetCat = targetCat
 
 

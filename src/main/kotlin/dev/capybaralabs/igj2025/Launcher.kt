@@ -18,6 +18,7 @@ import dev.capybaralabs.igj2025.elements.ControlledDirectionInputSystem
 import dev.capybaralabs.igj2025.elements.DirectionAiComponent
 import dev.capybaralabs.igj2025.elements.DirectionInputComponent
 import dev.capybaralabs.igj2025.elements.EnemyEntity
+import dev.capybaralabs.igj2025.elements.FocusCatSystem
 import dev.capybaralabs.igj2025.elements.GravitySystem
 import dev.capybaralabs.igj2025.elements.MoveSystem
 import dev.capybaralabs.igj2025.elements.RelationalTextureRenderSystem
@@ -50,6 +51,7 @@ fun main() {
 	game.addSystem(BookLaunchSystemCatToCat())
 	game.addSystem(BookFlyingSystem())
 	game.addSystem(BookCatchSystem())
+	game.addSystem(FocusCatSystem())
 
 	game.addSystem(GravitySystem())
 	game.addSystem(BookCollectionSystem())
@@ -125,7 +127,7 @@ fun spawnThreeCatsWasdSwitcherAndBook(scene: Scene) {
 	val book = BookEntity(catA)
 
 	val controller = ControlledDirectionInputComponent(cats) {
-		book.attachedToCat ?: book.targetCat ?: catA
+		book.controlledCat()
 	}
 	book.addComponent(controller)
 	book.addComponent(DirectionInputComponent())

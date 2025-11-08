@@ -9,7 +9,6 @@ import dev.capybaralabs.igj2025.ecs.System
 class TextureComponent(
 	val texture: Texture,
 	val highlight: Texture? = null,
-	val highlightOn: Boolean = false,
 ) : Component
 
 class ScaleComponent(
@@ -35,8 +34,8 @@ class RelationalTextureRenderSystem : System {
 		val textureCenter = texture.size() / 2f * scale
 
 		val highlight = entity.findComponent(TextureComponent::class)?.highlight
-		val shouldHighlight = entity.findComponent(TextureComponent::class)?.highlightOn != false
-		if (highlight != null || shouldHighlight) {
+		val shouldHighlight = entity.hasComponent(FocusedCatComponent::class)
+		if (highlight != null && shouldHighlight) {
 			drawTexturePro(highlight, textureRect, targetRect, textureCenter, rotation, WHITE)
 		}
 
