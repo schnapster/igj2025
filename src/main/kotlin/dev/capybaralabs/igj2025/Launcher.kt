@@ -19,12 +19,12 @@ import dev.capybaralabs.igj2025.elements.DirectionAiComponent
 import dev.capybaralabs.igj2025.elements.DirectionInputComponent
 import dev.capybaralabs.igj2025.elements.EnemyEntity
 import dev.capybaralabs.igj2025.elements.FocusCatSystem
+import dev.capybaralabs.igj2025.elements.FpsUiSystem
 import dev.capybaralabs.igj2025.elements.GravitySystem
 import dev.capybaralabs.igj2025.elements.MoveSystem
 import dev.capybaralabs.igj2025.elements.RelationalTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RotationSystem
 import dev.capybaralabs.igj2025.elements.ThrowSystem
-import dev.capybaralabs.igj2025.elements.UiFpsSystem
 import dev.capybaralabs.igj2025.elements.kvector2
 import kotlin.math.max
 
@@ -58,7 +58,7 @@ fun main() {
 	game.addSystem(ThrowSystem())
 	game.addSystem(RotationSystem())
 
-	game.addUiSystem(UiFpsSystem())
+	game.addUiSystem(FpsUiSystem())
 
 	while (!windowShouldClose()) {
 		// updates
