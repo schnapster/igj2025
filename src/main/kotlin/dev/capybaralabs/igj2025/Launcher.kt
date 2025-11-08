@@ -9,6 +9,7 @@ import dev.capybaralabs.igj2025.elements.BookCollectionSystem
 import dev.capybaralabs.igj2025.elements.BookEntity
 import dev.capybaralabs.igj2025.elements.BookFlyingSystem
 import dev.capybaralabs.igj2025.elements.BookLaunchSystemCatToCat
+import dev.capybaralabs.igj2025.elements.BorderSystem
 import dev.capybaralabs.igj2025.elements.CatEntity
 import dev.capybaralabs.igj2025.elements.DirectionAiComponent
 import dev.capybaralabs.igj2025.elements.DirectionInputComponent
@@ -34,6 +35,7 @@ fun main() {
 	val game = Game()
 
 	game.addSystem(MoveSystem())
+	game.addSystem(BorderSystem())
 	game.addSystem(DirectionInputSystem())
 	game.addSystem(AiInputSystem())
 

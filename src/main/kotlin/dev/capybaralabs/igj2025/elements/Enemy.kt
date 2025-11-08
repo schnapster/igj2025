@@ -25,7 +25,7 @@ class EnemyEntity(
 		addComponent(DirectionComponent(kvector2(0, 0)))
 		addComponent(SpeedComponent(400f))
 		addComponent(
-			SimpleWallComponent(
+			BorderComponent(
 				marginTop = ((ENEMY_TEXTURE.height / 2f) * scale).toFloat() + 50f,
 				marginBottom = ((ENEMY_TEXTURE.height / 2f) * scale).toFloat(),
 				marginLeft = ((ENEMY_TEXTURE.width / 2f) * scale).toFloat(),

@@ -25,15 +25,6 @@ class SpeedComponent(
 	var speed: Float,
 ) : Component
 
-class SimpleWallComponent(
-	var baseMargin: Float = 0f,
-	var marginTop: Float = 0f,
-	var marginBottom: Float = 0f,
-	var marginLeft: Float = 0f,
-	var marginRight: Float = 0f,
-) : Component
-
-
 class DirectionInputComponent(
 	val upKey: Int = KEY_W,
 	val downKey: Int = KEY_S,
@@ -134,45 +125,56 @@ class MoveSystem : System {
 			return
 		}
 		val normalizedDirection = vector2Normalize(direction)
+		position.x += normalizedDirection.x * speed * dt
+		position.y += normalizedDirection.y * speed * dt
+	}
+}
 
-		var borderTop = 0f;
-		var borderBottom = getScreenHeight().toFloat();
-		var borderLeft = 0f;
-		var borderRight = getScreenWidth().toFloat();
 
-		val wallComponent = entity.findComponent(SimpleWallComponent::class)
-		if (wallComponent != null) {
+class BorderComponent(
+	var baseMargin: Float = 0f,
+	var marginTop: Float = 0f,
+	var marginBottom: Float = 0f,
+	var marginLeft: Float = 0f,
+	var marginRight: Float = 0f,
+) : Component
 
-			val baseMargin = wallComponent.baseMargin
-			val marginTop = wallComponent.marginTop + baseMargin
-			val marginBottom = wallComponent.marginBottom + baseMargin
-			val marginLeft = wallComponent.marginLeft + baseMargin
-			val marginRight = wallComponent.marginRight + baseMargin
+class BorderSystem : System {
+	override fun update(dt: Float, entity: Entity) {
+		val position = entity.findComponent(PositionComponent::class)?.position
+		val borderComponent = entity.findComponent(BorderComponent::class)
 
-			borderTop += marginTop
-			borderBottom -= marginBottom
-			borderLeft += marginLeft
-			borderRight -= marginRight
-
+		if (position == null || borderComponent == null) {
+			return
 		}
 
-		var newPositionX = position.x + normalizedDirection.x * speed * dt
-		var newPositionY = position.y + normalizedDirection.y * speed * dt
+		var borderTop = 0f
+		var borderBottom = getScreenHeight().toFloat()
+		var borderLeft = 0f
+		var borderRight = getScreenWidth().toFloat()
 
-		if (newPositionX < borderLeft) {
-			newPositionX = borderLeft;
-		}
-		if (newPositionX > borderRight) {
-			newPositionX = borderRight;
-		}
-		if (newPositionY < borderTop) {
-			newPositionY = borderTop;
-		}
-		if (newPositionY > borderBottom) {
-			newPositionY = borderBottom;
-		}
+		val baseMargin = borderComponent.baseMargin
+		val marginTop = borderComponent.marginTop + baseMargin
+		val marginBottom = borderComponent.marginBottom + baseMargin
+		val marginLeft = borderComponent.marginLeft + baseMargin
+		val marginRight = borderComponent.marginRight + baseMargin
 
-		position.x = newPositionX
-		position.y = newPositionY
+		borderTop += marginTop
+		borderBottom -= marginBottom
+		borderLeft += marginLeft
+		borderRight -= marginRight
+
+		if (position.x < borderLeft) {
+			position.x = borderLeft;
+		}
+		if (position.x > borderRight) {
+			position.x = borderRight;
+		}
+		if (position.y < borderTop) {
+			position.y = borderTop;
+		}
+		if (position.y > borderBottom) {
+			position.y = borderBottom;
+		}
 	}
 }

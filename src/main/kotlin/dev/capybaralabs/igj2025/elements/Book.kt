@@ -31,7 +31,7 @@ class BookEntity(
 		// rendering
 		addComponent(TextureComponent(texture))
 		addComponent(ScaleComponent(scale))
-		addComponent(SimpleWallComponent(width() / 2f))
+		addComponent(BorderComponent(width() / 2f))
 	}
 
 	fun width(): Float {
