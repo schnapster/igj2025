@@ -2,30 +2,19 @@ package dev.capybaralabs.igj2025
 
 import com.raylib.Raylib.*
 import com.raylib.Raylib.KeyboardKey.*
-import com.raylib.Texture
-import com.raylib.Vector2
-import dev.capybaralabs.igj2025.ecs.Entity
 import dev.capybaralabs.igj2025.ecs.Game
 import dev.capybaralabs.igj2025.elements.BookEntity
 import dev.capybaralabs.igj2025.elements.BookThrowSystem
-import dev.capybaralabs.igj2025.elements.CircleShapeComponent
-import dev.capybaralabs.igj2025.elements.DirectionComponent
-import dev.capybaralabs.igj2025.elements.DirectionInputComponent
+import dev.capybaralabs.igj2025.elements.CatEntity
 import dev.capybaralabs.igj2025.elements.DirectionInputSystem
 import dev.capybaralabs.igj2025.elements.GravitySystem
 import dev.capybaralabs.igj2025.elements.MoveSystem
 import dev.capybaralabs.igj2025.elements.RelationalTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RotationSystem
-import dev.capybaralabs.igj2025.elements.ScaleComponent
-import dev.capybaralabs.igj2025.elements.SimplePositionComponent
-import dev.capybaralabs.igj2025.elements.SimpleWallComponent
-import dev.capybaralabs.igj2025.elements.SpeedComponent
-import dev.capybaralabs.igj2025.elements.TextureComponent
 import dev.capybaralabs.igj2025.elements.ThrowSystem
 import dev.capybaralabs.igj2025.elements.UiFpsSystem
 import dev.capybaralabs.igj2025.elements.kvector2
 import kotlin.math.max
-import kotlin.math.min
 
 fun main() {
 	initWindow(1200, 900, "Henlo!")
@@ -87,44 +76,4 @@ fun renderBackground() {
 		),
 		RAYWHITE,
 	)
-}
-
-class CatEntity(
-	val position: Vector2 = kvector2(getScreenWidth() / 2, getScreenHeight() - 200),
-
-	) : Entity() {
-	companion object {
-		private val CAT_TEXTURE: Texture = loadTexture("assets/image/cats_idle_aim.png")
-	}
-
-	private val scale = 0.3
-
-	init {
-		val texture = CAT_TEXTURE
-
-		//movement
-		addComponent(SimplePositionComponent(position))
-		addComponent(DirectionComponent(kvector2(0, 0)))
-		addComponent(SpeedComponent(400f))
-		addComponent(SimpleWallComponent(
-			marginTop = ((CAT_TEXTURE.height / 2f) * scale).toFloat() + 50f,
-			marginBottom = ((CAT_TEXTURE.height / 2f) * scale).toFloat(),
-			marginLeft = ((CAT_TEXTURE.width / 2f) * scale).toFloat(),
-			marginRight = ((CAT_TEXTURE.width / 2f) * scale).toFloat())
-		)
-
-		val radius = min(texture.width, texture.height) / 2f
-		addComponent(CircleShapeComponent(radius))
-
-		// input
-		addComponent(DirectionInputComponent())
-
-		// rendering
-		addComponent(TextureComponent(texture))
-		addComponent(ScaleComponent(scale))
-	}
-
-	fun floor(): Float {
-		return (position.y + (CAT_TEXTURE.height / 2f) * scale).toFloat()
-	}
 }
