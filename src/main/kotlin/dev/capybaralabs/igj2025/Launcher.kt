@@ -13,6 +13,7 @@ import dev.capybaralabs.igj2025.elements.BookFlyingSystem
 import dev.capybaralabs.igj2025.elements.BookLaunchSystemCatToCat
 import dev.capybaralabs.igj2025.elements.BorderSystem
 import dev.capybaralabs.igj2025.elements.CatEntity
+import dev.capybaralabs.igj2025.elements.CatTexturePack.Companion.ALL_CATS
 import dev.capybaralabs.igj2025.elements.CatEntity.Companion.CAT_TEXTURE_BLUE
 import dev.capybaralabs.igj2025.elements.CatEntity.Companion.CAT_TEXTURE_ORANGE
 import dev.capybaralabs.igj2025.elements.CatchBookEnemySystem
@@ -25,6 +26,7 @@ import dev.capybaralabs.igj2025.elements.FocusCatSystem
 import dev.capybaralabs.igj2025.elements.FpsUiSystem
 import dev.capybaralabs.igj2025.elements.GravitySystem
 import dev.capybaralabs.igj2025.elements.MoveSystem
+import dev.capybaralabs.igj2025.elements.RelationalCatTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RelationalTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RotationSystem
 import dev.capybaralabs.igj2025.elements.ScoreUiSystem
@@ -67,6 +69,7 @@ fun main() {
 	game.addSystem(BackgroundRenderSystem())
 	game.addEntity(BackgroundEntity(backgroundTextureGame))
 	game.addSystem(RelationalTextureRenderSystem())
+	game.addSystem(RelationalCatTextureRenderSystem())
 
 	spawnThreeCatsWasdSwitcherAndBook(game)
 
@@ -128,9 +131,11 @@ fun main() {
 }
 
 fun spawnThreeCatsWasdSwitcherAndBook(scene: Scene) {
-	val catA = CatEntity(position = kvector2(getScreenWidth() / 5, getScreenHeight() - 200), texture = CAT_TEXTURE_BLUE)
-	val catB = CatEntity(position = kvector2(getScreenWidth() / 5 * 4, getScreenHeight() - 200), texture = CAT_TEXTURE_ORANGE)
-	val catC = CatEntity(position = kvector2(getScreenWidth() / 2, getScreenHeight() / 3 - 200))
+	val texturePacks = ALL_CATS.shuffled().take(3).toMutableList()
+
+	val catA = CatEntity(position = kvector2(getScreenWidth() / 5, getScreenHeight() - 200), texturePack = texturePacks.removeFirst())
+	val catB = CatEntity(position = kvector2(getScreenWidth() / 5 * 4, getScreenHeight() - 200), texturePack = texturePacks.removeFirst())
+	val catC = CatEntity(position = kvector2(getScreenWidth() / 2, getScreenHeight() / 3 - 200), texturePack = texturePacks.removeFirst())
 
 	val cats = setOf(catA, catB, catC)
 
