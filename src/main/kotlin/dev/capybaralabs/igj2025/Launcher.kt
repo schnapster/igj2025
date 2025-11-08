@@ -31,6 +31,7 @@ import dev.capybaralabs.igj2025.elements.ScoreUiSystem
 import dev.capybaralabs.igj2025.elements.TextUiSystem
 import dev.capybaralabs.igj2025.elements.ThrowSystem
 import dev.capybaralabs.igj2025.elements.kvector2
+import dev.capybaralabs.igj2025.elements.ui.EndScreen
 import dev.capybaralabs.igj2025.elements.ui.StartScreen
 import dev.capybaralabs.igj2025.system.AssetLoader
 
@@ -42,6 +43,7 @@ enum class ScreenState() {
 }
 
 var screenState = ScreenState.START
+lateinit var game: Scene
 
 fun main() {
 //	setConfigFlags(FLAG_WINDOW_RESIZABLE)
@@ -57,34 +59,7 @@ fun main() {
 	setTargetFPS(144)
 	initAudioDevice()
 
-	val game = Scene()
-
-	game.addSystem(MoveSystem())
-	game.addSystem(BorderSystem())
-	game.addSystem(ControlledDirectionInputSystem())
-	game.addSystem(AiInputSystem())
-
-	game.addSystem(BackgroundRenderSystem())
-	game.addEntity(BackgroundEntity(backgroundTextureGame))
-	game.addSystem(RelationalTextureRenderSystem())
-	game.addSystem(RelationalCatTextureRenderSystem())
-
-	spawnThreeCatsWasdSwitcherAndBook(game)
-
-//	game.addSystem(BookLaunchSystem())
-	game.addSystem(BookLaunchSystemCatToCat())
-	game.addSystem(BookFlyingSystem())
-	game.addSystem(BookCatchSystem())
-	game.addSystem(CatchBookEnemySystem())
-	game.addSystem(FocusCatSystem())
-
-	game.addSystem(GravitySystem())
-	game.addSystem(BookCollectionSystem())
-	game.addSystem(ThrowSystem())
-	game.addSystem(RotationSystem())
-
-	game.addUiSystem(FpsUiSystem())
-	game.addUiSystem(ScoreUiSystem())
+	game = setupGame()
 
 	val startScreen = Scene()
 	startScreen.addSystem(BackgroundRenderSystem())
@@ -93,10 +68,17 @@ fun main() {
 	startScreen.addEntity(BackgroundEntity(backgroundTextureStartScreen))
 	startScreen.addEntity(StartScreen())
 
+	val endScreen = Scene()
+	endScreen.addSystem(BackgroundRenderSystem())
+	endScreen.addUiSystem(TextUiSystem())
+	endScreen.addEntity(BackgroundEntity(backgroundTextureEndScreen))
+	endScreen.addEntity(EndScreen())
+
+
 	while (!windowShouldClose()) {
 
 		// state changes
-		if (isKeyReleased(KEY_ENTER) && screenState == ScreenState.START) {
+		if (isKeyReleased(KEY_ENTER) && (screenState == ScreenState.START || screenState == ScreenState.END)) {
 			screenState = ScreenState.GAME
 		}
 
@@ -109,6 +91,9 @@ fun main() {
 		if (screenState == ScreenState.GAME) {
 			game.update(dt)
 		}
+		if (screenState == ScreenState.END) {
+			endScreen.update(dt)
+		}
 
 		//rendering
 		beginDrawing()
@@ -118,6 +103,10 @@ fun main() {
 		}
 		if (screenState == ScreenState.GAME) {
 			game.render()
+		}
+		if (screenState == ScreenState.END) {
+			game.close()
+			endScreen.render()
 		}
 
 		endDrawing()
@@ -156,10 +145,43 @@ fun spawnThreeCatsWasdSwitcherAndBook(scene: Scene) {
 	scene.addEntities(*cats.toTypedArray(), book, enemy)
 }
 
-private fun onBookCatch() {
-	screenState = ScreenState.START
+private fun setupGame(): Scene {
+	val game = Scene()
+
+	game.addSystem(MoveSystem())
+	game.addSystem(BorderSystem())
+	game.addSystem(ControlledDirectionInputSystem())
+	game.addSystem(AiInputSystem())
+
+	game.addSystem(BackgroundRenderSystem())
+	game.addEntity(BackgroundEntity(backgroundTextureGame))
+	game.addSystem(RelationalTextureRenderSystem())
+	game.addSystem(RelationalCatTextureRenderSystem())
+
+	spawnThreeCatsWasdSwitcherAndBook(game)
+
+//	game.addSystem(BookLaunchSystem())
+	game.addSystem(BookLaunchSystemCatToCat())
+	game.addSystem(BookFlyingSystem())
+	game.addSystem(BookCatchSystem())
+	game.addSystem(CatchBookEnemySystem())
+	game.addSystem(FocusCatSystem())
+
+	game.addSystem(GravitySystem())
+	game.addSystem(BookCollectionSystem())
+	game.addSystem(ThrowSystem())
+	game.addSystem(RotationSystem())
+
+	game.addUiSystem(FpsUiSystem())
+	game.addUiSystem(ScoreUiSystem())
+
+	return game
 }
 
+private fun onBookCatch() {
+	screenState = ScreenState.END
+	game = setupGame()
+}
 
 private val backgroundTextureGame by lazy {
 	AssetLoader.loadTexture("assets/image/gj_bg.png")
@@ -167,4 +189,8 @@ private val backgroundTextureGame by lazy {
 
 private val backgroundTextureStartScreen by lazy {
 	AssetLoader.loadTexture("assets/image/startscreenBG.png")
+}
+
+private val backgroundTextureEndScreen by lazy {
+	AssetLoader.loadTexture("assets/image/endScreen_BG.png")
 }
