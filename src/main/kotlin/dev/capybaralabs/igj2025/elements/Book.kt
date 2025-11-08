@@ -8,6 +8,7 @@ import dev.capybaralabs.igj2025.ecs.Component
 import dev.capybaralabs.igj2025.ecs.Entity
 import dev.capybaralabs.igj2025.ecs.System
 import java.util.concurrent.ThreadLocalRandom
+import kotlin.math.abs
 
 class BookEntity(
 	var attachedToCat: CatEntity? = null,
@@ -80,7 +81,7 @@ class BookLaunchSystem() : System {
 
 
 		// update speed & direction based on throw vector
-		val speed = (pullVector.x + pullVector.y) / 100
+		val speed = (abs(pullVector.x) + abs(pullVector.y)) * 2
 		val launchDirection = pullVector * -1
 
 		val rotationSpeed = getRandomValue(10, 40).toFloat()
