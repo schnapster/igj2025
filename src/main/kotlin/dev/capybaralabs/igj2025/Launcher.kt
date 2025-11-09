@@ -24,6 +24,8 @@ import dev.capybaralabs.igj2025.elements.EnemyEntity
 import dev.capybaralabs.igj2025.elements.FocusCatSystem
 import dev.capybaralabs.igj2025.elements.FpsUiSystem
 import dev.capybaralabs.igj2025.elements.GravitySystem
+import dev.capybaralabs.igj2025.elements.Highscore
+import dev.capybaralabs.igj2025.elements.LocalFileHighscoreApi
 import dev.capybaralabs.igj2025.elements.MoveSystem
 import dev.capybaralabs.igj2025.elements.RelationalCatTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RelationalTextureRenderSystem
@@ -40,7 +42,8 @@ import dev.capybaralabs.igj2025.elements.ui.HighscoreElement
 import dev.capybaralabs.igj2025.elements.ui.StartScreen
 import dev.capybaralabs.igj2025.elements.verticalOrientation
 import dev.capybaralabs.igj2025.system.AssetLoader
-
+import java.io.File
+import java.time.Instant
 
 enum class ScreenState() {
 	START,
@@ -53,6 +56,14 @@ lateinit var game: Scene
 var ingamePointHolder: Entity = Entity()
 var currentPoints: Float? = 0f
 var endScreenPointHolder: TextComponent? = null
+var endScreenHighscoreHolder: TextComponent? = null
+
+
+lateinit var tempDir: File
+
+private lateinit var api: LocalFileHighscoreApi
+private lateinit var dbPath: String
+
 
 fun main() {
 //	setConfigFlags(FLAG_WINDOW_RESIZABLE)
@@ -67,6 +78,14 @@ fun main() {
 	setExitKey(KEY_ESCAPE)
 	setTargetFPS(144)
 	initAudioDevice()
+
+
+	tempDir = File(System.getProperty("java.io.tmpdir")) // Add this
+	dbPath = File(tempDir, "test_highscores.db").absolutePath
+	api = LocalFileHighscoreApi(dbPath)
+
+	println("tempDir: $tempDir, exists: ${tempDir.exists()}, isDirectory: ${tempDir.isDirectory}")
+	println("dbPath: $dbPath")
 
 	game = setupGame()
 
@@ -95,6 +114,17 @@ fun main() {
 	)
 	endScreenPointHolder = pointHolder
 	highscore.addComponent(pointHolder)
+	val highscoreHolder = TextComponent(
+		text = "GET IT WORKING B*TCH",
+		verticalOrientation = verticalOrientation.BOTTOM,
+		horizontalOrientation = horizontalOrientation.RIGHT,
+		verticalMargin = getScreenHeight() / 5,
+		horizontalMargin = getScreenWidth() / 3,
+		fontSize = 50,
+		color = BLUE,
+	)
+	endScreenHighscoreHolder = highscoreHolder
+	highscore.addComponent(highscoreHolder)
 	endScreen.addEntity(highscore)
 
 	while (!windowShouldClose()) {
@@ -206,8 +236,27 @@ private fun setupGame(): Scene {
 
 private fun onBookCatch() {
 	currentPoints = ingamePointHolder.findComponent(ScoreComponent::class)?.score
+	val highscores = api.highscores()
+	var newHighscore = 0f
+	if (highscores != null) {
+		if (highscores.isNotEmpty()) {
+			val lastHighscore = highscores.first()
+			newHighscore = lastHighscore.score
+		}
+		if (currentPoints != null && newHighscore < currentPoints!!) {
+
+			newHighscore = currentPoints!!
+
+			val highscore = Highscore(
+				score = currentPoints!!,
+				name = "TestPlayer",
+				ts = Instant.now(),
+			)
+			api.addHighscore(highscore)
+		}
+		endScreenHighscoreHolder?.text = newHighscore.toString()
+	}
 	endScreenPointHolder?.text = currentPoints.toString()
-//	pointHolder
 	screenState = ScreenState.END
 	game = setupGame()
 }
