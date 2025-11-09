@@ -1,5 +1,6 @@
 package dev.capybaralabs.igj2025
 
+import com.raylib.Color
 import com.raylib.Raylib.*
 import com.raylib.Raylib.KeyboardKey.*
 import dev.capybaralabs.igj2025.ecs.Entity
@@ -65,8 +66,24 @@ lateinit var game: Scene
 private var highscoreDb = LocalFileHighscoreApi()
 private var previousAllTimeHighscore: Highscore? = null
 private var currentRunFinalScore: Highscore? = null
+private var isNewHighscore = false
+private var highscoreAnimationTimer = 0f
 
 const val DEBUG = false
+
+private fun getHighscoreAnimatedColor(): Color {
+	// Switch colors every 1 second
+	val colorIndex = (highscoreAnimationTimer.toInt() % 6)
+	return when (colorIndex) {
+		0 -> RED
+		1 -> GREEN
+		2 -> YELLOW
+		3 -> ORANGE
+		4 -> PURPLE
+		5 -> SKYBLUE
+		else -> BLUE
+	}
+}
 
 fun main() {
 //	setConfigFlags(FLAG_WINDOW_RESIZABLE)
@@ -121,6 +138,10 @@ fun main() {
 	highscore.addComponent(highscoreHolder)
 	endScreen.addEntity(highscore)
 
+	// Store references to update colors dynamically
+	var currentScoreText = pointHolder
+	var previousHighscoreText = highscoreHolder
+
 	while (!windowShouldClose()) {
 
 		// state changes
@@ -129,6 +150,7 @@ fun main() {
 		}
 		if (isKeyReleased(KEY_ENTER) && screenState == ScreenState.END) {
 			screenState = ScreenState.START
+			isNewHighscore = false // Reset the flag when going back to START
 		}
 
 		// updates
@@ -142,6 +164,15 @@ fun main() {
 		}
 		if (screenState == ScreenState.END) {
 			endScreen.update(dt)
+
+			// Update highscore animation if new highscore was achieved
+			if (isNewHighscore) {
+				highscoreAnimationTimer += dt
+				previousHighscoreText.text = currentScoreText.text
+				previousHighscoreText.color = getHighscoreAnimatedColor()
+			} else {
+				previousHighscoreText.color = BLUE
+			}
 		}
 
 		//rendering
@@ -254,6 +285,12 @@ private fun onEnemyBookCatch(finalScore: Int) {
 		ts = Instant.now(),
 	)
 	highscoreDb.saveHighscore(currentRunHighscore)
+
+	// Check if it's a new highscore
+	isNewHighscore = allTimeHighscore == null || currentRunHighscore.score > allTimeHighscore.score
+	if (isNewHighscore) {
+		highscoreAnimationTimer = 0f // Reset animation timer
+	}
 
 	previousAllTimeHighscore = allTimeHighscore
 	currentRunFinalScore = currentRunHighscore
