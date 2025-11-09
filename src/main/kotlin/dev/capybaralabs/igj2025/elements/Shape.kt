@@ -12,4 +12,3 @@ class RectangleShapeComponent(
 class CircleShapeComponent(
 	val radius: Float,
 ) : ShapeComponent
-

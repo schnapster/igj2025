@@ -3,11 +3,14 @@ package dev.capybaralabs.igj2025.elements
 import com.raylib.Image
 import com.raylib.Raylib
 import com.raylib.Raylib.*
+import com.raylib.Rectangle
 import com.raylib.Texture
 import com.raylib.Vector2
+import dev.capybaralabs.igj2025.DEBUG
 import dev.capybaralabs.igj2025.ecs.Component
 import dev.capybaralabs.igj2025.ecs.Entity
 import dev.capybaralabs.igj2025.ecs.System
+import dev.capybaralabs.igj2025.elements.RelationalTextureRenderSystem.Companion.TRANSPARENT_MAGENTA
 import dev.capybaralabs.igj2025.system.AssetLoader
 import kotlin.math.min
 
@@ -59,31 +62,90 @@ class EnemyEntity(
 }
 
 class EnemyCatchBookSystem : System {
+
 	override fun update(dt: Float, entities: Set<Entity>) {
 		val targetEntities = entities.filterIsInstance<BookEntity>()
 		val enemyEntities = entities.filterIsInstance<EnemyEntity>()
 
 		for (enemy in enemyEntities) {
-			val enemyTexture = enemy.findComponent(TextureComponent::class) ?: continue
-			val touchAreaTexture = enemyTexture.highlight ?: continue
-			val enemyPos = enemy.position
-			val enemyScale = enemy.findComponent(ScaleComponent::class)?.scale ?: continue
-
 			for (book in targetEntities) {
-				val bookTexture = book.findComponent(TextureComponent::class)?.texture ?: continue
-				val bookPos = book.findComponent(PositionComponent::class)?.position ?: continue
-				val bookScale = book.findComponent(ScaleComponent::class)?.scale ?: continue
+				val enemyCollisionData = enemyCollionData(enemy)
+				val bookCollisionData = bookCollisionData(book)
+				val colliding = checkCollisionCircles(
+					enemyCollisionData.center, enemyCollisionData.radius,
+					bookCollisionData.center, bookCollisionData.radius,
+				)
 
-				// Check pixel-perfect collision
-				if (checkPixelPerfectCollision(
-						touchAreaTexture, enemyPos, enemyScale,
-						bookTexture, bookPos, bookScale,
-					)
-				) {
+				if (colliding) {
 					// Handle collision: catch the book
 					enemy.findComponent(CatchBookEnemyComponent::class)?.handleOnBookCatch()
 				}
 			}
+		}
+	}
+
+	private data class EnemyCollisionData(
+		val center: Vector2,
+		val radius: Float,
+	)
+
+	private data class BookCollisionData(
+		val collisionRect: Rectangle,
+		val collisionCenter: Vector2,
+		val rotation: Float,
+
+		val center: Vector2,
+		val radius: Float,
+	)
+
+	private fun enemyCollionData(enemy: EnemyEntity): EnemyCollisionData {
+		val texture = enemy.findComponent(TextureComponent::class)!!.texture
+		val position = enemy.findComponent(PositionComponent::class)!!.position
+
+		val enemyRenderData = RelationalTextureRenderSystem.calculateRenderData(enemy, position, texture)
+		drawCircleV(position, 5f, MAGENTA)
+
+		val offset = kvector2(220, -220) * enemyRenderData.scale
+		val radius = 200 / 2 * enemyRenderData.scale
+
+		return EnemyCollisionData(position + offset, radius)
+	}
+
+	private fun bookCollisionData(book: BookEntity): BookCollisionData {
+		val texture = book.findComponent(TextureComponent::class)!!.texture
+		val position = book.findComponent(PositionComponent::class)!!.position
+
+		val bookRenderData = RelationalTextureRenderSystem.calculateRenderData(book, position, texture)
+		val targetRect = bookRenderData.targetRect
+		val textureCenter = bookRenderData.textureCenter
+
+		val bookSizeFactor = 0.85f
+		val bookCollisionRect = krectangle(targetRect.position(), targetRect.size() * bookSizeFactor)
+		val bookCollisionCenter = textureCenter * bookSizeFactor
+
+
+		return BookCollisionData(
+			bookCollisionRect, bookCollisionCenter, bookRenderData.rotation,
+			position, 50f,
+		)
+	}
+
+	override fun render(entity: Entity) {
+		// DEBUG render collisions
+		if (!DEBUG) return
+
+
+		val enemy = entity as? EnemyEntity
+		if (enemy != null) {
+			val (center, radius) = enemyCollionData(enemy)
+			drawCircleV(center, radius, TRANSPARENT_MAGENTA)
+		}
+
+		val book = entity as? BookEntity
+		if (book != null) {
+			val (collisionRect, collisionCenter, rotation, center, radius) = bookCollisionData(book)
+			drawRectanglePro(collisionRect, collisionCenter, rotation, TRANSPARENT_MAGENTA)
+			drawCircleV(center, radius, MAGENTA)
 		}
 	}
 
@@ -96,78 +158,4 @@ class EnemyCatchBookSystem : System {
 		imageCache.values.forEach { unloadImage(it) }
 		imageCache.clear()
 	}
-
-
-	private fun checkPixelPerfectCollision(
-		texture1: Texture, pos1: Vector2, scale1: Float,
-		texture2: Texture, pos2: Vector2, scale2: Float,
-	): Boolean {
-		// Calculate bounding boxes (centered sprites)
-		val width1 = (texture1.width * scale1)
-		val height1 = (texture1.height * scale1)
-		val rect1 = krectangle(
-			pos1.x - width1 / 2f,
-			pos1.y - height1 / 2f,
-			width1,
-			height1,
-		)
-
-		val width2 = (texture2.width * scale2)
-		val height2 = (texture2.height * scale2)
-		val rect2 = krectangle(
-			pos2.x - width2 / 2f,
-			pos2.y - height2 / 2f,
-			width2,
-			height2,
-		)
-
-		// First check if bounding boxes overlap
-		if (!checkCollisionRecs(rect1, rect2)) {
-			return false
-		}
-
-		// Get the overlapping region
-		val collision = getCollisionRec(rect1, rect2)
-		if (collision.width <= 0 || collision.height <= 0) {
-			return false
-		}
-
-		// Load images for pixel checking
-		val image1 = loadImage(texture1)
-		val image2 = loadImage(texture2)
-
-		// Check pixels in the overlapping region
-		val startX = collision.x.toInt()
-		val startY = collision.y.toInt()
-		val endX = (collision.x + collision.width).toInt()
-		val endY = (collision.y + collision.height).toInt()
-
-		for (y in startY until endY) {
-			for (x in startX until endX) {
-				// Convert world coordinates to texture coordinates
-				val tex1X = ((x - rect1.x) / scale1).toInt()
-				val tex1Y = ((y - rect1.y) / scale1).toInt()
-				val tex2X = ((x - rect2.x) / scale2).toInt()
-				val tex2Y = ((y - rect2.y) / scale2).toInt()
-
-				// Check bounds
-				if (tex1X >= 0 && tex1X < texture1.width && tex1Y >= 0 && tex1Y < texture1.height &&
-					tex2X >= 0 && tex2X < texture2.width && tex2Y >= 0 && tex2Y < texture2.height
-				) {
-
-					// Get pixel colors
-					val color1 = getImageColor(image1, tex1X, tex1Y)
-					val color2 = getImageColor(image2, tex2X, tex2Y)
-
-					// Check if both pixels have opacity > 0
-					if (color1.a > 0 && color2.a > 0) {
-						return true
-					}
-				}
-			}
-		}
-
-		return false
-	}
-
 }

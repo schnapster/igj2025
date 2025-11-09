@@ -67,6 +67,7 @@ lateinit var tempDir: File
 private lateinit var api: LocalFileHighscoreApi
 private lateinit var dbPath: String
 
+val DEBUG = false
 
 fun main() {
 //	setConfigFlags(FLAG_WINDOW_RESIZABLE)

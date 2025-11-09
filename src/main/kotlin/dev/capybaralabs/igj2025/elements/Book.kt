@@ -36,7 +36,6 @@ class BookEntity(
 		addComponent(ScaleComponent(scale))
 		addComponent(BorderComponent(width() / 2f))
 
-
 		addComponent(ScoreComponent())
 	}
 

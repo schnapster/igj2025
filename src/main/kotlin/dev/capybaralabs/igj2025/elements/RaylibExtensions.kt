@@ -62,4 +62,12 @@ fun krectangle(x: Number, y: Number, width: Number, height: Number): Rectangle {
 	return Rectangle(x.toFloat(), y.toFloat(), width.toFloat(), height.toFloat())
 }
 
+fun Rectangle.position(): Vector2 {
+	return kvector2(x, y)
+}
+
+fun Rectangle.size(): Vector2 {
+	return kvector2(width, height)
+}
+
 fun Boolean.toInt() = if (this) 1 else 0
