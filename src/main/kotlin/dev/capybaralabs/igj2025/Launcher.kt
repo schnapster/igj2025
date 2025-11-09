@@ -25,6 +25,7 @@ import dev.capybaralabs.igj2025.elements.FocusCatSystem
 import dev.capybaralabs.igj2025.elements.FpsUiSystem
 import dev.capybaralabs.igj2025.elements.GravitySystem
 import dev.capybaralabs.igj2025.elements.Highscore
+import dev.capybaralabs.igj2025.elements.InGameUi
 import dev.capybaralabs.igj2025.elements.LocalFileHighscoreApi
 import dev.capybaralabs.igj2025.elements.MoveSystem
 import dev.capybaralabs.igj2025.elements.RelationalCatTextureRenderSystem
@@ -115,7 +116,7 @@ fun main() {
 	endScreenPointHolder = pointHolder
 	highscore.addComponent(pointHolder)
 	val highscoreHolder = TextComponent(
-		text = "GET IT WORKING B*TCH",
+		text = "-",
 		verticalOrientation = verticalOrientation.BOTTOM,
 		horizontalOrientation = horizontalOrientation.RIGHT,
 		verticalMargin = getScreenHeight() / 5,
@@ -230,6 +231,8 @@ private fun setupGame(): Scene {
 
 	game.addUiSystem(FpsUiSystem())
 	game.addUiSystem(ScoreUiSystem())
+	game.addUiSystem(TextUiSystem())
+	game.addEntity(InGameUi())
 
 	return game
 }

@@ -17,7 +17,7 @@ class CatchBookEnemyComponent(onBookCatch: () -> Unit) : Component {
 
 class EnemyEntity(
 	val position: Vector2 = kvector2(getScreenWidth() / 2, getScreenHeight() - 200),
-	initialSpeed: Float = 200f,
+	initialSpeed: Float = 100f,
 	directionAiInput: DirectionAiComponent = DirectionAiComponent(),
 	handleOnBookCatch: () -> Unit,
 ) : Entity() {
