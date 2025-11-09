@@ -1,4 +1,4 @@
-# Regular Afternoon in the Wizard Tower
+# Regular Afternoon at the Wizard Tower
 
 ## Build
 

@@ -43,7 +43,7 @@ runtime {
 	modules = ['java.desktop', 'java.sql', 'jdk.unsupported']
 
 	jpackage {
-		imageName = 'RAitWT'
+		imageName = 'RAatWT'
 		appVersion = '1.0.0'
 
 		// Platform-specific options

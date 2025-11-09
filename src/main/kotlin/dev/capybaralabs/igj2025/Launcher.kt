@@ -77,7 +77,7 @@ fun main() {
 //	val monitor = getCurrentMonitor()
 //	val monitorHeight = getMonitorHeight(monitor)
 //	val monitorWidth = getMonitorWidth(monitor)
-	initWindow(1200, 900, "Regular Afternoon in the Wizard Tower - by Noemi & Dennis")
+	initWindow(1200, 900, "Regular Afternoon at the Wizard Tower - by Noemi & Dennis")
 //	toggleFullscreen()
 //	toggleBorderlessWindowed()
 	setExitKey(KEY_ESCAPE)
