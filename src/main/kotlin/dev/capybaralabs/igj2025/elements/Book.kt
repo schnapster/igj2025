@@ -66,7 +66,13 @@ class FlyingComponent(
 class BookLaunchSystemCatToCat() : System {
 
 	companion object {
-		val MEOW: Sound = loadSound("assets/audio/meow.wav")
+		val MEOW1: Sound = loadSound("assets/audio/meow.wav")
+		val MEOW2: Sound = loadSound("assets/audio/meow2.wav")
+		val MEOW3: Sound = loadSound("assets/audio/meow3.wav")
+
+		val MEOWS = listOf(MEOW1, MEOW2, MEOW3)
+
+		var LAST_MEOW: Sound = MEOW2
 	}
 
 	override fun update(dt: Float, entities: Set<Entity>) {
@@ -119,7 +125,9 @@ class BookLaunchSystemCatToCat() : System {
 			?: RotatingComponent(rotationSpeed, rotationClockwise)
 
 		val throwStart = book.position.copy()
-		playSound(MEOW)
+		val sound = MEOWS.filterNot { it == LAST_MEOW }.random()
+		LAST_MEOW = sound
+		playSound(sound)
 		val thrownComponent = FlyingComponent(targetCat) {
 			rotatingComponent.paused = true
 			speedComponent.speed = 0f
