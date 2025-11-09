@@ -153,11 +153,11 @@ class BookCatchSystem() : System {
 	override fun update(dt: Float, entities: Set<Entity>) {
 		val cats = entities.filterIsInstance<CatEntity>()
 		entities.filterIsInstance<BookEntity>().forEach { book ->
-			update(dt, book, cats)
+			update(dt, book, cats, entities)
 		}
 	}
 
-	fun update(dt: Float, book: BookEntity, cats: List<CatEntity>) {
+	fun update(dt: Float, book: BookEntity, cats: List<CatEntity>, allEntities: Set<Entity>) {
 		val isFlying = book.findComponent(FlyingComponent::class) ?: return
 
 		// we arrived yet?
@@ -171,12 +171,21 @@ class BookCatchSystem() : System {
 			book.removeComponent(isFlying)
 			book.attachedToCat = book.targetCat
 			book.targetCat = null
+
 			// remove frozen movement component when successfull throw happened
+			var wasUnfrozen = false
 			cats.forEach { cat ->
 				val freezeComponent = cat.findComponent(FrozenMovementComponent::class)
 				if (freezeComponent != null) {
 					cat.removeComponent(freezeComponent)
+					wasUnfrozen = true
 				}
+			}
+
+			// Show unfreeze notification if cats were unfrozen
+			if (wasUnfrozen) {
+				val notificationEntity = allEntities.filterIsInstance<ModeNotificationEntity>().firstOrNull()
+				notificationEntity?.showNotification("UNFROZEN!", 3f)
 			}
 		}
 	}
