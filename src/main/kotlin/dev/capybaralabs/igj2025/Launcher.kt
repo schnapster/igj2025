@@ -15,11 +15,11 @@ import dev.capybaralabs.igj2025.elements.BookLaunchSystemCatToCat
 import dev.capybaralabs.igj2025.elements.BorderSystem
 import dev.capybaralabs.igj2025.elements.CatEntity
 import dev.capybaralabs.igj2025.elements.CatTexturePack.Companion.ALL_CATS
-import dev.capybaralabs.igj2025.elements.CatchBookEnemySystem
 import dev.capybaralabs.igj2025.elements.ControlledDirectionInputComponent
 import dev.capybaralabs.igj2025.elements.ControlledDirectionInputSystem
 import dev.capybaralabs.igj2025.elements.DirectionAiComponent
 import dev.capybaralabs.igj2025.elements.DirectionInputComponent
+import dev.capybaralabs.igj2025.elements.EnemyCatchBookSystem
 import dev.capybaralabs.igj2025.elements.EnemyEntity
 import dev.capybaralabs.igj2025.elements.FocusCatSystem
 import dev.capybaralabs.igj2025.elements.FpsUiSystem
@@ -220,7 +220,7 @@ private fun setupGame(): Scene {
 	game.addSystem(BookLaunchSystemCatToCat())
 	game.addSystem(BookFlyingSystem())
 	game.addSystem(BookCatchSystem())
-	game.addSystem(CatchBookEnemySystem())
+	game.addSystem(EnemyCatchBookSystem())
 	game.addSystem(FocusCatSystem())
 
 	game.addSystem(GravitySystem())

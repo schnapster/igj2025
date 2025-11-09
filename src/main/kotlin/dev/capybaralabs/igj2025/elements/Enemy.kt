@@ -56,13 +56,13 @@ class EnemyEntity(
 	}
 }
 
-class CatchBookEnemySystem : System {
+class EnemyCatchBookSystem : System {
 	override fun update(dt: Float, entities: Set<Entity>) {
-		var targetEntities = entities.filter { entity ->
+		val targetEntities = entities.filter { entity ->
 			entity::class == BookEntity::class
 		}
 
-		var enemyEntities = entities.filter { entity ->
+		val enemyEntities = entities.filter { entity ->
 			entity::class == EnemyEntity::class
 		}
 
@@ -73,7 +73,7 @@ class CatchBookEnemySystem : System {
 			val enemyScale = enemy.findComponent(ScaleComponent::class)?.scale ?: 1.0
 
 			for (entity in targetEntities) {
-				val bookEntity = entity as? BookEntity ?: continue
+				entity as? BookEntity ?: continue
 				val bookTexture = entity.findComponent(TextureComponent::class)?.texture ?: continue
 				val bookPos = entity.findComponent(PositionComponent::class)?.position ?: continue
 				val bookScale = entity.findComponent(ScaleComponent::class)?.scale ?: 1.0
