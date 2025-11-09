@@ -16,7 +16,7 @@ data class Highscore(
 
 interface HighscoreApi {
 	fun highscores(): List<Highscore>
-	fun addHighscore(highscore: Highscore)
+	fun saveHighscore(highscore: Highscore)
 }
 
 // AI Generated Code lol
@@ -143,7 +143,7 @@ class LocalFileHighscoreApi(
 		}
 	}
 
-	override fun addHighscore(highscore: Highscore) {
+	override fun saveHighscore(highscore: Highscore) {
 		try {
 			val sql = "INSERT INTO highscores (score, name, ts) VALUES (?, ?, ?)"
 

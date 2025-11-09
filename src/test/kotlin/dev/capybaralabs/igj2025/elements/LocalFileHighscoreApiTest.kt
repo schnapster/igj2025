@@ -43,7 +43,7 @@ class LocalFileHighscoreApiTest {
 			ts = Instant.now(),
 		)
 
-		api.addHighscore(highscore)
+		api.saveHighscore(highscore)
 
 		val highscores = api.highscores()
 		assertEquals(1, highscores.size)
@@ -58,9 +58,9 @@ class LocalFileHighscoreApiTest {
 		val highscore2 = Highscore(200.0f, "Player2", Instant.now())
 		val highscore3 = Highscore(150.25f, "Player3", Instant.now())
 
-		api.addHighscore(highscore1)
-		api.addHighscore(highscore2)
-		api.addHighscore(highscore3)
+		api.saveHighscore(highscore1)
+		api.saveHighscore(highscore2)
+		api.saveHighscore(highscore3)
 
 		val highscores = api.highscores()
 		assertEquals(3, highscores.size)
@@ -72,9 +72,9 @@ class LocalFileHighscoreApiTest {
 		val highscore2 = Highscore(200.0f, "Player2", Instant.now())
 		val highscore3 = Highscore(150.25f, "Player3", Instant.now())
 
-		api.addHighscore(highscore1)
-		api.addHighscore(highscore2)
-		api.addHighscore(highscore3)
+		api.saveHighscore(highscore1)
+		api.saveHighscore(highscore2)
+		api.saveHighscore(highscore3)
 
 		val highscores = api.highscores()
 		assertEquals(200.0f, highscores[0].score)
@@ -85,7 +85,7 @@ class LocalFileHighscoreApiTest {
 	@Test
 	fun `should persist data across connections`() {
 		val highscore = Highscore(100.5f, "TestPlayer", Instant.now())
-		api.addHighscore(highscore)
+		api.saveHighscore(highscore)
 		api.close()
 
 		// Create new connection to same database

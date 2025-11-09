@@ -2,7 +2,6 @@ package dev.capybaralabs.igj2025
 
 import com.raylib.Raylib.*
 import com.raylib.Raylib.KeyboardKey.*
-import dev.capybaralabs.igj2025.ecs.Entity
 import dev.capybaralabs.igj2025.ecs.Scene
 import dev.capybaralabs.igj2025.elements.AiInputSystem
 import dev.capybaralabs.igj2025.elements.BackgroundEntity
@@ -27,6 +26,7 @@ import dev.capybaralabs.igj2025.elements.FocusCatSystem
 import dev.capybaralabs.igj2025.elements.FpsUiSystem
 import dev.capybaralabs.igj2025.elements.GravitySystem
 import dev.capybaralabs.igj2025.elements.Highscore
+import dev.capybaralabs.igj2025.elements.HorizontalOrientation
 import dev.capybaralabs.igj2025.elements.InGameUi
 import dev.capybaralabs.igj2025.elements.LocalFileHighscoreApi
 import dev.capybaralabs.igj2025.elements.ModeChangeHandlerSystem
@@ -42,14 +42,12 @@ import dev.capybaralabs.igj2025.elements.TemporaryTextSystem
 import dev.capybaralabs.igj2025.elements.TextComponent
 import dev.capybaralabs.igj2025.elements.TextUiSystem
 import dev.capybaralabs.igj2025.elements.ThrowSystem
-import dev.capybaralabs.igj2025.elements.horizontalOrientation
+import dev.capybaralabs.igj2025.elements.VerticalOrientation
 import dev.capybaralabs.igj2025.elements.kvector2
 import dev.capybaralabs.igj2025.elements.ui.EndScreen
 import dev.capybaralabs.igj2025.elements.ui.HighscoreElement
 import dev.capybaralabs.igj2025.elements.ui.StartScreen
-import dev.capybaralabs.igj2025.elements.verticalOrientation
 import dev.capybaralabs.igj2025.system.AssetLoader
-import java.io.File
 import java.time.Instant
 
 enum class ScreenState() {
@@ -60,16 +58,10 @@ enum class ScreenState() {
 
 var screenState = ScreenState.START
 lateinit var game: Scene
-var ingamePointHolder: Entity = Entity()
-var currentPoints: Float? = 0f
-var endScreenPointHolder: TextComponent? = null
-var endScreenHighscoreHolder: TextComponent? = null
 
-
-lateinit var tempDir: File
-
-private lateinit var api: LocalFileHighscoreApi
-private lateinit var dbPath: String
+private var highscoreDb = LocalFileHighscoreApi()
+private var previousAllTimeHighscore: Highscore? = null
+private var currentRunFinalScore: Highscore? = null
 
 const val DEBUG = false
 
@@ -88,13 +80,6 @@ fun main() {
 	initAudioDevice()
 
 
-	tempDir = File(System.getProperty("java.io.tmpdir")) // Add this
-	dbPath = File(tempDir, "test_highscores.db").absolutePath
-	api = LocalFileHighscoreApi(dbPath)
-
-	println("tempDir: $tempDir, exists: ${tempDir.exists()}, isDirectory: ${tempDir.isDirectory}")
-	println("dbPath: $dbPath")
-
 	game = setupGame()
 
 	val startScreen = Scene()
@@ -112,26 +97,24 @@ fun main() {
 	endScreen.addEntity(EndScreen())
 	val highscore = HighscoreElement()
 	val pointHolder = TextComponent(
-		text = currentPoints.toString(),
-		verticalOrientation = verticalOrientation.BOTTOM,
-		horizontalOrientation = horizontalOrientation.RIGHT,
+		text = { currentRunFinalScore?.score?.toInt().toString() },
+		verticalOrientation = VerticalOrientation.BOTTOM,
+		horizontalOrientation = HorizontalOrientation.RIGHT,
 		verticalMargin = getScreenHeight() / 2 - 60,
 		horizontalMargin = getScreenWidth() / 4 - 50,
 		fontSize = 50,
 		color = BLUE,
 	)
-	endScreenPointHolder = pointHolder
 	highscore.addComponent(pointHolder)
 	val highscoreHolder = TextComponent(
-		text = "-",
-		verticalOrientation = verticalOrientation.BOTTOM,
-		horizontalOrientation = horizontalOrientation.RIGHT,
+		text = { previousAllTimeHighscore?.score?.toInt()?.toString() ?: "-" },
+		verticalOrientation = VerticalOrientation.BOTTOM,
+		horizontalOrientation = HorizontalOrientation.RIGHT,
 		verticalMargin = getScreenHeight() / 5,
 		horizontalMargin = getScreenWidth() / 3,
 		fontSize = 50,
 		color = BLUE,
 	)
-	endScreenHighscoreHolder = highscoreHolder
 	highscore.addComponent(highscoreHolder)
 	endScreen.addEntity(highscore)
 
@@ -190,7 +173,6 @@ fun spawnThreeCatsWasdSwitcherAndBook(scene: Scene) {
 	val cats = setOf(catA, catB, catC)
 
 	val book = BookEntity(catA)
-	ingamePointHolder = book
 
 	val controller = ControlledDirectionInputComponent(cats) {
 		book.controlledCat()
@@ -204,7 +186,10 @@ fun spawnThreeCatsWasdSwitcherAndBook(scene: Scene) {
 			cats,
 			book,
 		),
-		handleOnBookCatch = { onBookCatch() },
+		handleOnBookCatch = {
+			val score = book.findComponent(ScoreComponent::class)!!.score
+			onEnemyBookCatch(score)
+		},
 	)
 	scene.addEntities(*cats.toTypedArray(), book, enemy)
 }
@@ -250,29 +235,20 @@ private fun setupGame(): Scene {
 	return game
 }
 
-private fun onBookCatch() {
-	currentPoints = ingamePointHolder.findComponent(ScoreComponent::class)?.score
-	val highscores = api.highscores()
-	var newHighscore = 0f
-	if (highscores != null) {
-		if (highscores.isNotEmpty()) {
-			val lastHighscore = highscores.first()
-			newHighscore = lastHighscore.score
-		}
-		if (currentPoints != null && newHighscore < currentPoints!!) {
+private fun onEnemyBookCatch(finalScore: Int) {
+	val allTimeHighscore = highscoreDb.highscores()
+		.maxByOrNull { it.score }
 
-			newHighscore = currentPoints!!
+	val currentRunHighscore = Highscore(
+		score = finalScore.toFloat(),
+		name = "TestPlayer",
+		ts = Instant.now(),
+	)
+	highscoreDb.saveHighscore(currentRunHighscore)
 
-			val highscore = Highscore(
-				score = currentPoints!!,
-				name = "TestPlayer",
-				ts = Instant.now(),
-			)
-			api.addHighscore(highscore)
-		}
-		endScreenHighscoreHolder?.text = newHighscore.toInt().toString()
-	}
-	endScreenPointHolder?.text = currentPoints?.toInt().toString()
+	previousAllTimeHighscore = allTimeHighscore
+	currentRunFinalScore = currentRunHighscore
+
 	screenState = ScreenState.END
 	game = setupGame()
 }

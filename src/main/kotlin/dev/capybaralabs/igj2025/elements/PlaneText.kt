@@ -6,18 +6,18 @@ import dev.capybaralabs.igj2025.ecs.Component
 import dev.capybaralabs.igj2025.ecs.Entity
 import dev.capybaralabs.igj2025.ecs.System
 
-enum class verticalOrientation {
+enum class VerticalOrientation {
 	TOP, BOTTOM, CENTER
 }
 
-enum class horizontalOrientation {
+enum class HorizontalOrientation {
 	LEFT, RIGHT, CENTER
 }
 
 class TextComponent(
-	var text: String = "",
-	var verticalOrientation: verticalOrientation,
-	var horizontalOrientation: horizontalOrientation,
+	var text: () -> String = { "" },
+	var verticalOrientation: VerticalOrientation,
+	var horizontalOrientation: HorizontalOrientation,
 	var verticalMargin: Int,
 	var horizontalMargin: Int,
 	var fontSize: Int,
@@ -27,35 +27,33 @@ class TextComponent(
 class TextUiSystem() : System {
 
 	override fun render(entity: Entity) {
-		val components = entity.findComponents(TextComponent::class) ?: return
+		val components = entity.findComponents(TextComponent::class)
 
 		for (tC in components) {
+			var posX = 0
+			var posY = 0
 
-
-			var posX = 0;
-			var posY = 0;
-
-			if (tC.verticalOrientation == verticalOrientation.BOTTOM) {
-				posY = getScreenHeight() - ((tC.verticalMargin ?: 0) + tC.fontSize ?: 50)
+			if (tC.verticalOrientation == VerticalOrientation.BOTTOM) {
+				posY = getScreenHeight() - ((tC.verticalMargin) + tC.fontSize)
 			}
-			if (tC.verticalOrientation == verticalOrientation.TOP) {
-				posY = tC.verticalMargin ?: 0
+			if (tC.verticalOrientation == VerticalOrientation.TOP) {
+				posY = tC.verticalMargin
 			}
-			if (tC.verticalOrientation == verticalOrientation.CENTER) {
+			if (tC.verticalOrientation == VerticalOrientation.CENTER) {
 				posY = getScreenHeight() / 2 + tC.horizontalMargin
 			}
 
-			if (tC.horizontalOrientation == horizontalOrientation.LEFT) {
-				posX = 0 + (tC.horizontalMargin ?: 0)
+			if (tC.horizontalOrientation == HorizontalOrientation.LEFT) {
+				posX = 0 + (tC.horizontalMargin)
 			}
-			if (tC.horizontalOrientation == horizontalOrientation.RIGHT) {
-				posX = getScreenWidth() - (tC.horizontalMargin ?: 0)
+			if (tC.horizontalOrientation == HorizontalOrientation.RIGHT) {
+				posX = getScreenWidth() - (tC.horizontalMargin)
 			}
-			if (tC.horizontalOrientation == horizontalOrientation.CENTER) {
+			if (tC.horizontalOrientation == HorizontalOrientation.CENTER) {
 				posX = getScreenWidth() / 2 + tC.horizontalMargin
 			}
 
-			drawText(tC.text, posX, posY, tC.fontSize ?: 50, tC.color ?: WHITE)
+			drawText(tC.text.invoke(), posX, posY, tC.fontSize, tC.color)
 		}
 	}
 }

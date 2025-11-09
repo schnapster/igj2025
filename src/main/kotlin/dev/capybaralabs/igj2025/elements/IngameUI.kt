@@ -40,7 +40,7 @@ data class BookUITexturePack(
 }
 
 class ScoreComponent(
-	var score: Float = 0f,
+	var score: Int = 0,
 ) : Component
 
 class ScoreUiSystem() : System {
@@ -48,8 +48,7 @@ class ScoreUiSystem() : System {
 	override fun render(entity: Entity) {
 		val scoreComponent = entity.findComponent(ScoreComponent::class) ?: return
 
-		val score = scoreComponent.score.toInt()
-//		val score = (scoreComponent.score / 100).toInt()
+		val score = scoreComponent.score
 
 		drawText("$score", 40, getScreenHeight() - 150, 60, YELLOW)
 	}
@@ -59,9 +58,9 @@ class InGameUi() : Entity() {
 	init {
 		addComponent(
 			TextComponent(
-				text = "Move - [WASD]",
-				verticalOrientation = verticalOrientation.BOTTOM,
-				horizontalOrientation = horizontalOrientation.LEFT,
+				text = { "Move - [WASD]" },
+				verticalOrientation = VerticalOrientation.BOTTOM,
+				horizontalOrientation = HorizontalOrientation.LEFT,
 				verticalMargin = 75,
 				horizontalMargin = 20,
 				fontSize = 20,
@@ -70,9 +69,9 @@ class InGameUi() : Entity() {
 		)
 		addComponent(
 			TextComponent(
-				text = "Select Cat to throw to - [M]",
-				verticalOrientation = verticalOrientation.BOTTOM,
-				horizontalOrientation = horizontalOrientation.LEFT,
+				text = { "Select Cat to throw to - [M]" },
+				verticalOrientation = VerticalOrientation.BOTTOM,
+				horizontalOrientation = HorizontalOrientation.LEFT,
 				verticalMargin = 50,
 				horizontalMargin = 20,
 				fontSize = 20,
@@ -81,9 +80,9 @@ class InGameUi() : Entity() {
 		)
 		addComponent(
 			TextComponent(
-				text = "Throw - [SPACE]",
-				verticalOrientation = verticalOrientation.BOTTOM,
-				horizontalOrientation = horizontalOrientation.LEFT,
+				text = { "Throw - [SPACE]" },
+				verticalOrientation = VerticalOrientation.BOTTOM,
+				horizontalOrientation = HorizontalOrientation.LEFT,
 				verticalMargin = 25,
 				horizontalMargin = 20,
 				fontSize = 20,
@@ -153,7 +152,7 @@ open class BookUiSystem : System {
 		val scoreComponent = bookEntity.findComponent(ScoreComponent::class) ?: return
 		val state = bookUI.findComponent(BookStateComponent::class) ?: return
 
-		val currentScore = scoreComponent.score.toInt()
+		val currentScore = scoreComponent.score
 
 		// Check if score has increased
 		if (currentScore > lastScore) {
