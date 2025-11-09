@@ -25,8 +25,10 @@ class EnemyEntity(
 	handleOnBookCatch: () -> Unit,
 ) : Entity() {
 	companion object {
-		private val ENEMY_TEXTURE: Texture = AssetLoader.loadTexture("assets/image/enemy.png")
-		private val TOUCHAREA_TEXTURE: Texture = AssetLoader.loadTexture("assets/image/enemy_touch_area.png")
+		val ENEMY_TEXTURE: Texture = AssetLoader.loadTexture("assets/image/enemy.png")
+		val TOUCHAREA_TEXTURE: Texture = AssetLoader.loadTexture("assets/image/enemy_touch_area.png")
+		val ENEMY_TEXTURE_FLIPPED: Texture = AssetLoader.loadTexture("assets/image/enemy_flipped.png")
+		val TOUCHAREA_TEXTURE_FLIPPED: Texture = AssetLoader.loadTexture("assets/image/enemy_touch_area_flipped.png")
 	}
 
 	private val scale = 0.35f
@@ -58,6 +60,11 @@ class EnemyEntity(
 		// rendering
 		addComponent(TextureComponent(texture, TOUCHAREA_TEXTURE))
 		addComponent(ScaleComponent(scale))
+	}
+
+	fun isFlipped(): Boolean {
+		val direction = findComponent(DirectionComponent::class)?.direction
+		return direction?.x?.let { it < 0 } ?: false
 	}
 }
 
@@ -106,9 +113,16 @@ class EnemyCatchBookSystem : System {
 		drawCircleV(position, 5f, MAGENTA)
 
 		val offset = kvector2(220, -220) * enemyRenderData.scale
+		val offsetFlipped = kvector2(-220, -220) * enemyRenderData.scale
 		val radius = 200 / 2 * enemyRenderData.scale
 
-		return EnemyCollisionData(position + offset, radius)
+		val center = if (enemy.isFlipped()) {
+			position + offsetFlipped
+		} else {
+			position + offset
+		}
+
+		return EnemyCollisionData(center, radius)
 	}
 
 	private fun bookCollisionData(book: BookEntity): BookCollisionData {

@@ -62,6 +62,8 @@ open class RelationalTextureRenderSystem : System {
 			return
 		}
 		if (entity is CatEntity) return // handled by RelationalCatTextureRenderSystem
+		if (entity is EnemyEntity) return // handled by RelationalEnemyTextureRenderSystem
+
 
 		render(entity, position, texture.texture, texture.highlight)
 	}
@@ -75,6 +77,27 @@ open class RelationalTextureRenderSystem : System {
 		}
 
 		drawTexturePro(texture, textureRect, targetRect, textureCenter, rotation, WHITE)
+	}
+}
+
+class RelationalEnemyTextureRenderSystem : RelationalTextureRenderSystem() {
+	override fun render(entity: Entity) {
+		val enemy = entity as? EnemyEntity
+		val position = entity.findComponent(PositionComponent::class)?.position
+		if (position == null || enemy == null) {
+			return
+		}
+
+		val texture: Texture
+		val highlight: Texture
+		if (enemy.isFlipped()) {
+			texture = EnemyEntity.ENEMY_TEXTURE_FLIPPED
+			highlight = EnemyEntity.TOUCHAREA_TEXTURE_FLIPPED
+		} else {
+			texture = EnemyEntity.ENEMY_TEXTURE
+			highlight = EnemyEntity.TOUCHAREA_TEXTURE
+		}
+		render(entity, position, texture, highlight)
 	}
 }
 

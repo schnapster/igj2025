@@ -31,6 +31,7 @@ import dev.capybaralabs.igj2025.elements.InGameUi
 import dev.capybaralabs.igj2025.elements.LocalFileHighscoreApi
 import dev.capybaralabs.igj2025.elements.MoveSystem
 import dev.capybaralabs.igj2025.elements.RelationalCatTextureRenderSystem
+import dev.capybaralabs.igj2025.elements.RelationalEnemyTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RelationalTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RotationSystem
 import dev.capybaralabs.igj2025.elements.ScoreComponent
@@ -67,7 +68,7 @@ lateinit var tempDir: File
 private lateinit var api: LocalFileHighscoreApi
 private lateinit var dbPath: String
 
-val DEBUG = false
+const val DEBUG = false
 
 fun main() {
 //	setConfigFlags(FLAG_WINDOW_RESIZABLE)
@@ -217,6 +218,7 @@ private fun setupGame(): Scene {
 	game.addEntity(BackgroundEntity(backgroundTextureGame))
 	game.addSystem(RelationalTextureRenderSystem())
 	game.addSystem(RelationalCatTextureRenderSystem())
+	game.addSystem(RelationalEnemyTextureRenderSystem())
 
 	spawnThreeCatsWasdSwitcherAndBook(game)
 
