@@ -1,5 +1,7 @@
 package dev.capybaralabs.igj2025.elements
 
+import com.raylib.Image
+import com.raylib.Raylib
 import com.raylib.Raylib.*
 import com.raylib.Texture
 import com.raylib.Vector2
@@ -91,6 +93,17 @@ class EnemyCatchBookSystem : System {
 		}
 	}
 
+	private val imageCache = mutableMapOf<Texture, Image>()
+	private fun loadImage(texture: Texture): Image {
+		return imageCache.computeIfAbsent(texture, Raylib::loadImageFromTexture)
+	}
+
+	override fun close(entities: Set<Entity>) {
+		imageCache.values.forEach { unloadImage(it) }
+		imageCache.clear()
+	}
+
+
 	private fun checkPixelPerfectCollision(
 		texture1: Texture, pos1: Vector2, scale1: Double,
 		texture2: Texture, pos2: Vector2, scale2: Double,
@@ -126,46 +139,41 @@ class EnemyCatchBookSystem : System {
 		}
 
 		// Load images for pixel checking
-		val image1 = loadImageFromTexture(texture1)
-		val image2 = loadImageFromTexture(texture2)
+		val image1 = loadImage(texture1)
+		val image2 = loadImage(texture2)
 
-		try {
-			// Check pixels in the overlapping region
-			val startX = collision.x.toInt()
-			val startY = collision.y.toInt()
-			val endX = (collision.x + collision.width).toInt()
-			val endY = (collision.y + collision.height).toInt()
+		// Check pixels in the overlapping region
+		val startX = collision.x.toInt()
+		val startY = collision.y.toInt()
+		val endX = (collision.x + collision.width).toInt()
+		val endY = (collision.y + collision.height).toInt()
 
-			for (y in startY until endY) {
-				for (x in startX until endX) {
-					// Convert world coordinates to texture coordinates
-					val tex1X = ((x - rect1.x) / scale1).toInt()
-					val tex1Y = ((y - rect1.y) / scale1).toInt()
-					val tex2X = ((x - rect2.x) / scale2).toInt()
-					val tex2Y = ((y - rect2.y) / scale2).toInt()
+		for (y in startY until endY) {
+			for (x in startX until endX) {
+				// Convert world coordinates to texture coordinates
+				val tex1X = ((x - rect1.x) / scale1).toInt()
+				val tex1Y = ((y - rect1.y) / scale1).toInt()
+				val tex2X = ((x - rect2.x) / scale2).toInt()
+				val tex2Y = ((y - rect2.y) / scale2).toInt()
 
-					// Check bounds
-					if (tex1X >= 0 && tex1X < texture1.width && tex1Y >= 0 && tex1Y < texture1.height &&
-						tex2X >= 0 && tex2X < texture2.width && tex2Y >= 0 && tex2Y < texture2.height
-					) {
+				// Check bounds
+				if (tex1X >= 0 && tex1X < texture1.width && tex1Y >= 0 && tex1Y < texture1.height &&
+					tex2X >= 0 && tex2X < texture2.width && tex2Y >= 0 && tex2Y < texture2.height
+				) {
 
-						// Get pixel colors
-						val color1 = getImageColor(image1, tex1X, tex1Y)
-						val color2 = getImageColor(image2, tex2X, tex2Y)
+					// Get pixel colors
+					val color1 = getImageColor(image1, tex1X, tex1Y)
+					val color2 = getImageColor(image2, tex2X, tex2Y)
 
-						// Check if both pixels have opacity > 0
-						if (color1.a > 0 && color2.a > 0) {
-							return true
-						}
+					// Check if both pixels have opacity > 0
+					if (color1.a > 0 && color2.a > 0) {
+						return true
 					}
 				}
 			}
-		} finally {
-			// Clean up images
-			unloadImage(image1)
-			unloadImage(image2)
 		}
 
 		return false
 	}
+
 }
