@@ -150,9 +150,14 @@ class BookFlyingSystem() : System {
 }
 
 class BookCatchSystem() : System {
-	override fun update(dt: Float, entity: Entity) {
-		val book = entity as? BookEntity ?: return
+	override fun update(dt: Float, entities: Set<Entity>) {
+		val cats = entities.filterIsInstance<CatEntity>()
+		entities.filterIsInstance<BookEntity>().forEach { book ->
+			update(dt, book, cats)
+		}
+	}
 
+	fun update(dt: Float, book: BookEntity, cats: List<CatEntity>) {
 		val isFlying = book.findComponent(FlyingComponent::class) ?: return
 
 		// we arrived yet?
@@ -166,6 +171,13 @@ class BookCatchSystem() : System {
 			book.removeComponent(isFlying)
 			book.attachedToCat = book.targetCat
 			book.targetCat = null
+			// remove frozen movement component when successfull throw happened
+			cats.forEach { cat ->
+				val freezeComponent = cat.findComponent(FrozenMovementComponent::class)
+				if (freezeComponent != null) {
+					cat.removeComponent(freezeComponent)
+				}
+			}
 		}
 	}
 }

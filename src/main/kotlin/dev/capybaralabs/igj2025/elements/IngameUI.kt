@@ -173,13 +173,15 @@ open class BookUiSystem : System {
 
 					// Randomly select a new mode (excluding DEFAULT)
 					val availableModes = Mode.values().filter { it != state.currentMode && it != Mode.TELEPORT }
-					state.nextMode = availableModes.random()
+//					state.nextMode = availableModes.random()
+					state.nextMode = Mode.FREEZE
 
 					println("Cycled to page 1 with new mode: ${state.nextMode}")
 				} else if(currentScore == 1){
 					// Randomly select a new mode (excluding DEFAULT)
 					val availableModes = Mode.values().filter { it != state.currentMode && it != Mode.TELEPORT }
-					state.nextMode = availableModes.random()
+//					state.nextMode = availableModes.random()
+					state.nextMode = Mode.FREEZE
 				}
 			}
 
