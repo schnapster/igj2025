@@ -16,7 +16,7 @@ class HighscoreElement() : Entity() {
 			AssetLoader.loadTexture("assets/image/highscore_default.png")
 	}
 
-	val scale = 0.6
+	val scale = 0.6f
 	val position: Vector2 = kvector2(getScreenWidth() / 2 - 80, getScreenHeight() / 3 + 50)
 
 	init {

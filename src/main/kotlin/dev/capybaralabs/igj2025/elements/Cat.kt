@@ -48,7 +48,7 @@ class CatEntity(
 	val texturePack: CatTexturePack = CAT_DEFAULT,
 ) : Entity() {
 
-	private val scale = 0.3
+	private val scale = 0.3f
 
 	init {
 		val texture = texturePack.idle

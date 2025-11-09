@@ -48,7 +48,7 @@ class BookCollectionSystem : System {
 		// Get required components
 		val position = entity.findComponent(PositionComponent::class)?.position ?: return null
 		val texture = entity.findComponent(TextureComponent::class)?.texture ?: return null
-		val scale = entity.findComponent(ScaleComponent::class)?.scale ?: 1.0
+		val scale = entity.findComponent(ScaleComponent::class)?.scale ?: 1f
 
 		// Calculate sprite dimensions with scale
 		val width = texture.width * scale

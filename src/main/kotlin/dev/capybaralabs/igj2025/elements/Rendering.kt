@@ -13,7 +13,7 @@ class TextureComponent(
 ) : Component
 
 class ScaleComponent(
-	val scale: Double,
+	val scale: Float,
 ) : Component
 
 // relational meaning that the position of the object is its center, and the
@@ -33,7 +33,7 @@ open class RelationalTextureRenderSystem : System {
 
 
 	fun render(entity: Entity, position: Vector2, texture: Texture, highlight: Texture?) {
-		val scale = entity.findComponent(ScaleComponent::class)?.scale ?: 1.0
+		val scale = entity.findComponent(ScaleComponent::class)?.scale ?: 1f
 
 		val rotation = entity.findComponent(RotatingComponent::class)?.rotation ?: 0f
 

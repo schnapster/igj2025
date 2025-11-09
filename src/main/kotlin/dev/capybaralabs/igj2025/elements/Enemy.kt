@@ -26,7 +26,7 @@ class EnemyEntity(
 		private val TOUCHAREA_TEXTURE: Texture = AssetLoader.loadTexture("assets/image/enemy_touch_area.png")
 	}
 
-	private val scale = 0.35
+	private val scale = 0.35f
 
 	init {
 		val texture = ENEMY_TEXTURE
@@ -37,10 +37,10 @@ class EnemyEntity(
 		addComponent(SpeedComponent(initialSpeed))
 		addComponent(
 			BorderComponent(
-				marginTop = ((ENEMY_TEXTURE.height / 2f) * scale).toFloat() + 50f,
-				marginBottom = ((ENEMY_TEXTURE.height / 2f) * scale).toFloat(),
-				marginLeft = ((ENEMY_TEXTURE.width / 2f) * scale).toFloat(),
-				marginRight = ((ENEMY_TEXTURE.width / 2f) * scale).toFloat(),
+				marginTop = ((ENEMY_TEXTURE.height / 2f) * scale) + 50f,
+				marginBottom = ((ENEMY_TEXTURE.height / 2f) * scale),
+				marginLeft = ((ENEMY_TEXTURE.width / 2f) * scale),
+				marginRight = ((ENEMY_TEXTURE.width / 2f) * scale),
 			),
 		)
 
@@ -99,12 +99,12 @@ class EnemyCatchBookSystem : System {
 
 
 	private fun checkPixelPerfectCollision(
-		texture1: Texture, pos1: Vector2, scale1: Double,
-		texture2: Texture, pos2: Vector2, scale2: Double,
+		texture1: Texture, pos1: Vector2, scale1: Float,
+		texture2: Texture, pos2: Vector2, scale2: Float,
 	): Boolean {
 		// Calculate bounding boxes (centered sprites)
-		val width1 = (texture1.width * scale1).toFloat()
-		val height1 = (texture1.height * scale1).toFloat()
+		val width1 = (texture1.width * scale1)
+		val height1 = (texture1.height * scale1)
 		val rect1 = krectangle(
 			pos1.x - width1 / 2f,
 			pos1.y - height1 / 2f,
@@ -112,8 +112,8 @@ class EnemyCatchBookSystem : System {
 			height1,
 		)
 
-		val width2 = (texture2.width * scale2).toFloat()
-		val height2 = (texture2.height * scale2).toFloat()
+		val width2 = (texture2.width * scale2)
+		val height2 = (texture2.height * scale2)
 		val rect2 = krectangle(
 			pos2.x - width2 / 2f,
 			pos2.y - height2 / 2f,

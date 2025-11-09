@@ -25,7 +25,7 @@ class BookEntity(
 			AssetLoader.loadTexture("assets/image/book_idle.png")
 	}
 
-	val scale = 0.4
+	val scale = 0.4f
 
 	init {
 		val texture = BOOK_TEXTURE
