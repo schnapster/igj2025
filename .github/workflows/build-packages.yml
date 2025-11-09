@@ -48,37 +48,37 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           cd build/jpackage
-          tar -czf igj2025-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz igj2025.app/
+          tar -czf RAitWT-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz RAitWT.app/
         shell: bash
 
       - name: Compress image (Linux)
         if: runner.os == 'Linux'
         run: |
           cd build/jpackage
-          tar -czf igj2025-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz igj2025/
+          tar -czf RAitWT-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz RAitWT/
         shell: bash
 
       - name: Compress image (Windows)
         if: runner.os == 'Windows'
         run: |
           cd build/jpackage
-          Compress-Archive -Path igj2025 -DestinationPath igj2025-${{ matrix.platform }}-${{ matrix.arch }}.zip
+          Compress-Archive -Path RAitWT -DestinationPath RAitWT-${{ matrix.platform }}-${{ matrix.arch }}.zip
         shell: pwsh
 
       - name: Upload artifact (Unix)
         if: runner.os != 'Windows'
         uses: actions/upload-artifact@v4
         with:
-          name: igj2025-${{ matrix.platform }}-${{ matrix.arch }}
-          path: build/jpackage/igj2025-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz
+          name: RAitWT-${{ matrix.platform }}-${{ matrix.arch }}
+          path: build/jpackage/RAitWT-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz
           if-no-files-found: error
 
       - name: Upload artifact (Windows)
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v4
         with:
-          name: igj2025-${{ matrix.platform }}-${{ matrix.arch }}
-          path: build/jpackage/igj2025-${{ matrix.platform }}-${{ matrix.arch }}.zip
+          name: RAitWT-${{ matrix.platform }}-${{ matrix.arch }}
+          path: build/jpackage/RAitWT-${{ matrix.platform }}-${{ matrix.arch }}.zip
           if-no-files-found: error
 
   release:
