@@ -60,25 +60,19 @@ class EnemyEntity(
 
 class EnemyCatchBookSystem : System {
 	override fun update(dt: Float, entities: Set<Entity>) {
-		val targetEntities = entities.filter { entity ->
-			entity::class == BookEntity::class
-		}
-
-		val enemyEntities = entities.filter { entity ->
-			entity::class == EnemyEntity::class
-		}
+		val targetEntities = entities.filterIsInstance<BookEntity>()
+		val enemyEntities = entities.filterIsInstance<EnemyEntity>()
 
 		for (enemy in enemyEntities) {
 			val enemyTexture = enemy.findComponent(TextureComponent::class) ?: continue
 			val touchAreaTexture = enemyTexture.highlight ?: continue
-			val enemyPos = enemy.findComponent(SimplePositionComponent::class)?.position ?: continue
-			val enemyScale = enemy.findComponent(ScaleComponent::class)?.scale ?: 1.0
+			val enemyPos = enemy.position
+			val enemyScale = enemy.findComponent(ScaleComponent::class)?.scale ?: continue
 
-			for (entity in targetEntities) {
-				entity as? BookEntity ?: continue
-				val bookTexture = entity.findComponent(TextureComponent::class)?.texture ?: continue
-				val bookPos = entity.findComponent(PositionComponent::class)?.position ?: continue
-				val bookScale = entity.findComponent(ScaleComponent::class)?.scale ?: 1.0
+			for (book in targetEntities) {
+				val bookTexture = book.findComponent(TextureComponent::class)?.texture ?: continue
+				val bookPos = book.position
+				val bookScale = book.findComponent(ScaleComponent::class)?.scale ?: continue
 
 				// Check pixel-perfect collision
 				if (checkPixelPerfectCollision(
