@@ -181,7 +181,7 @@ fun spawnThreeCatsWasdSwitcherAndBook(scene: Scene) {
 	book.addComponent(DirectionInputComponent())
 
 	val enemy = EnemyEntity(
-		position = kvector2(getScreenWidth() / 5 * 4, getScreenHeight() - 200),
+		position = kvector2(getScreenWidth() / 5 * 3, getScreenHeight() - 300),
 		directionAiInput = DirectionAiComponent(
 			cats,
 			book,
