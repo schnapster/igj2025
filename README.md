@@ -1,4 +1,4 @@
-<img align="right" src="assets/icon.png" height="200" width="200">
+<img align="right" src="src/main/resources/assets/icon.png" height="200" width="200">
 
 # Regular Afternoon at the Wizard Tower
 
@@ -8,8 +8,8 @@ Find the latest releases at https://github.com/schnapster/igj2025/releases
 
 ## Screenshots
 
-![title](assets/screenshots/intro.png)
-![ingame](assets/screenshots/ingame2.png)
+![title](src/main/resources/assets/screenshots/intro.png)
+![ingame](src/main/resources/assets/screenshots/ingame2.png)
 
 ## Build
 
