@@ -3,6 +3,7 @@ package dev.capybaralabs.igj2025.elements
 import com.raylib.Raylib.*
 import com.raylib.Raylib.KeyboardKey.*
 import com.raylib.Raylib.MouseButton.MOUSE_BUTTON_LEFT
+import com.raylib.Sound
 import com.raylib.Texture
 import com.raylib.Vector2
 import dev.capybaralabs.igj2025.ecs.Component
@@ -64,6 +65,10 @@ class FlyingComponent(
 
 class BookLaunchSystemCatToCat() : System {
 
+	companion object {
+		val MEOW: Sound = loadSound("assets/audio/meow.wav")
+	}
+
 	override fun update(dt: Float, entities: Set<Entity>) {
 		val cats = entities.filterIsInstance<CatEntity>()
 		for (entity in entities) {
@@ -114,6 +119,7 @@ class BookLaunchSystemCatToCat() : System {
 			?: RotatingComponent(rotationSpeed, rotationClockwise)
 
 		val throwStart = book.position.copy()
+		playSound(MEOW)
 		val thrownComponent = FlyingComponent(targetCat) {
 			rotatingComponent.paused = true
 			speedComponent.speed = 0f
