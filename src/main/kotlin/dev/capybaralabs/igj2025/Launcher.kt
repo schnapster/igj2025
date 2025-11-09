@@ -2,6 +2,7 @@ package dev.capybaralabs.igj2025
 
 import com.raylib.Raylib.*
 import com.raylib.Raylib.KeyboardKey.*
+import dev.capybaralabs.igj2025.ecs.Entity
 import dev.capybaralabs.igj2025.ecs.Scene
 import dev.capybaralabs.igj2025.elements.AiInputSystem
 import dev.capybaralabs.igj2025.elements.BackgroundEntity
@@ -27,13 +28,17 @@ import dev.capybaralabs.igj2025.elements.MoveSystem
 import dev.capybaralabs.igj2025.elements.RelationalCatTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RelationalTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RotationSystem
+import dev.capybaralabs.igj2025.elements.ScoreComponent
 import dev.capybaralabs.igj2025.elements.ScoreUiSystem
+import dev.capybaralabs.igj2025.elements.TextComponent
 import dev.capybaralabs.igj2025.elements.TextUiSystem
 import dev.capybaralabs.igj2025.elements.ThrowSystem
+import dev.capybaralabs.igj2025.elements.horizontalOrientation
 import dev.capybaralabs.igj2025.elements.kvector2
 import dev.capybaralabs.igj2025.elements.ui.EndScreen
 import dev.capybaralabs.igj2025.elements.ui.HighscoreElement
 import dev.capybaralabs.igj2025.elements.ui.StartScreen
+import dev.capybaralabs.igj2025.elements.verticalOrientation
 import dev.capybaralabs.igj2025.system.AssetLoader
 
 
@@ -43,8 +48,11 @@ enum class ScreenState() {
 	END
 }
 
-var screenState = ScreenState.END
+var screenState = ScreenState.START
 lateinit var game: Scene
+var ingamePointHolder: Entity = Entity()
+var currentPoints: Float? = 0f
+var endScreenPointHolder: TextComponent? = null
 
 fun main() {
 //	setConfigFlags(FLAG_WINDOW_RESIZABLE)
@@ -75,7 +83,19 @@ fun main() {
 	endScreen.addUiSystem(TextUiSystem())
 	endScreen.addEntity(BackgroundEntity(backgroundTextureEndScreen))
 	endScreen.addEntity(EndScreen())
-	endScreen.addEntity(HighscoreElement())
+	val highscore = HighscoreElement()
+	val pointHolder = TextComponent(
+		text = currentPoints.toString(),
+		verticalOrientation = verticalOrientation.BOTTOM,
+		horizontalOrientation = horizontalOrientation.RIGHT,
+		verticalMargin = getScreenHeight() / 2 - 60,
+		horizontalMargin = getScreenWidth() / 4 - 50,
+		fontSize = 50,
+		color = BLUE,
+	)
+	endScreenPointHolder = pointHolder
+	highscore.addComponent(pointHolder)
+	endScreen.addEntity(highscore)
 
 	while (!windowShouldClose()) {
 
@@ -132,6 +152,7 @@ fun spawnThreeCatsWasdSwitcherAndBook(scene: Scene) {
 	val cats = setOf(catA, catB, catC)
 
 	val book = BookEntity(catA)
+	ingamePointHolder = book
 
 	val controller = ControlledDirectionInputComponent(cats) {
 		book.controlledCat()
@@ -184,6 +205,9 @@ private fun setupGame(): Scene {
 }
 
 private fun onBookCatch() {
+	currentPoints = ingamePointHolder.findComponent(ScoreComponent::class)?.score
+	endScreenPointHolder?.text = currentPoints.toString()
+//	pointHolder
 	screenState = ScreenState.END
 	game = setupGame()
 }

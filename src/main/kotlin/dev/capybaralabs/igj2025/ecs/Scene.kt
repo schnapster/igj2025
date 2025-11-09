@@ -1,5 +1,7 @@
 package dev.capybaralabs.igj2025.ecs
 
+import kotlin.reflect.KClass
+
 class Scene(
 	initialEntites: Set<Entity> = setOf(),
 	initialSystems: Set<System> = setOf(),
@@ -16,6 +18,9 @@ class Scene(
 	}
 	fun addEntities(vararg toAdd: Entity) {
 		entities += toAdd
+	}
+	fun <T : Any> findEntityOfType(type: KClass<T>): T {
+		return entities.filter { type.isInstance(it) }.map { it as T }.first()
 	}
 
 	fun removeEntity(entity: Entity) {
