@@ -2,6 +2,7 @@ package dev.capybaralabs.igj2025
 
 import com.raylib.Raylib.*
 import com.raylib.Raylib.KeyboardKey.*
+import dev.capybaralabs.igj2025.ecs.Entity
 import dev.capybaralabs.igj2025.ecs.Scene
 import dev.capybaralabs.igj2025.elements.AiInputSystem
 import dev.capybaralabs.igj2025.elements.BackgroundEntity
@@ -32,6 +33,8 @@ import dev.capybaralabs.igj2025.elements.LocalFileHighscoreApi
 import dev.capybaralabs.igj2025.elements.ModeChangeHandlerSystem
 import dev.capybaralabs.igj2025.elements.ModeNotificationEntity
 import dev.capybaralabs.igj2025.elements.MoveSystem
+import dev.capybaralabs.igj2025.elements.MusicComponent
+import dev.capybaralabs.igj2025.elements.MusicSystem
 import dev.capybaralabs.igj2025.elements.RelationalCatTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RelationalEnemyTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RelationalTextureRenderSystem
@@ -196,6 +199,12 @@ fun spawnThreeCatsWasdSwitcherAndBook(scene: Scene) {
 
 private fun setupGame(): Scene {
 	val game = Scene()
+
+	val music = Entity().apply {
+		addComponent(MusicComponent("music1.wav")) // mp3 super broken
+	}
+	game.addEntity(music)
+	game.addSystem(MusicSystem())
 
 	game.addSystem(MoveSystem())
 	game.addSystem(BorderSystem())
