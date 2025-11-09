@@ -96,7 +96,8 @@ class InGameUi() : Entity() {
 
 open class BookUiSystem : System {
 	private var currentPageTexture: Texture? = null
-	private var currentIconTexture: Texture? = null
+	private var nextIconTexture: Texture? = null
+	private var lastScore: Int = 0
 
 	// Array for efficient page texture lookup
 	private val pageTextures: Array<Texture?> by lazy {
@@ -118,7 +119,7 @@ open class BookUiSystem : System {
 		val texture = entity.findComponent(TextureComponent::class) ?: return
 
 		render(entity, position, texture.texture)
-		currentIconTexture?.let { render(entity, position, it) }
+		nextIconTexture?.let { render(entity, position, it) }
 		currentPageTexture?.let { render(entity, position, it) }
 	}
 
@@ -134,9 +135,56 @@ open class BookUiSystem : System {
 	}
 
 	override fun update(dt: Float, entities: Set<Entity>) {
-		// Efficient filtering using filterIsInstance
-		entities.filterIsInstance<BookUI>().forEach { bookUI ->
-			updateBookUI(bookUI)
+		// Find the BookEntity to track its score
+		val bookEntity = entities.filterIsInstance<BookEntity>().firstOrNull()
+		val bookUI = entities.filterIsInstance<BookUI>().firstOrNull()
+
+		if (bookEntity != null && bookUI != null) {
+			updateScoreAndPages(bookEntity, bookUI)
+		}
+
+		// Update UI for all BookUI entities
+		entities.filterIsInstance<BookUI>().forEach { bookUIEntity ->
+			updateBookUI(bookUIEntity)
+		}
+	}
+
+	private fun updateScoreAndPages(bookEntity: BookEntity, bookUI: BookUI) {
+		val scoreComponent = bookEntity.findComponent(ScoreComponent::class) ?: return
+		val state = bookUI.findComponent(BookStateComponent::class) ?: return
+
+		val currentScore = scoreComponent.score.toInt()
+
+		// Check if score has increased
+		if (currentScore > lastScore) {
+			val pointsGained = currentScore - lastScore
+			lastScore = currentScore
+
+			// Update the currentPoints to track actual score
+			state.currentPoints = currentScore
+
+			// Turn pages for each point gained
+			for (i in 1..pointsGained) {
+				state.currentPage++
+
+				// If we've gone past page 6, cycle back to page 1 and randomize mode
+				if (state.currentPage > 6) {
+					state.currentPage = 1
+					state.currentMode = state.nextMode
+
+					// Randomly select a new mode (excluding DEFAULT)
+					val availableModes = Mode.values().filter { it != state.currentMode && it != Mode.TELEPORT && it != Mode.SLOWMO }
+					state.nextMode = availableModes.random()
+
+					println("Cycled to page 1 with new mode: ${state.nextMode}")
+				} else if(currentScore == 1){
+					// Randomly select a new mode (excluding DEFAULT)
+					val availableModes = Mode.values().filter { it != state.currentMode && it != Mode.TELEPORT && it != Mode.SLOWMO }
+					state.nextMode = availableModes.random()
+				}
+			}
+
+			println("Score: $currentScore, Page: ${state.currentPage}, Mode: ${state.nextMode}")
 		}
 	}
 
@@ -147,7 +195,7 @@ open class BookUiSystem : System {
 		currentPageTexture = pageTextures.getOrNull(state.currentPage)
 
 		// Update icon texture based on mode
-		currentIconTexture = when (state.currentMode) {
+		nextIconTexture = when (state.nextMode) {
 			Mode.FREEZE -> BOOKUI_TP.iconFreeze
 			Mode.SLOWMO -> BOOKUI_TP.iconSlowmo
 			Mode.SPEED -> BOOKUI_TP.iconSpeed
@@ -162,9 +210,10 @@ enum class Mode {
 }
 
 class BookStateComponent(
-	val currentPoints: Int = 0,
-	val currentPage: Int = 0,
-	val currentMode: Mode = Mode.DEFAULT,
+	var currentPoints: Int = 0,
+	var currentPage: Int = 0,
+	var currentMode: Mode = Mode.DEFAULT,
+	var nextMode: Mode = Mode.DEFAULT,
 ) : Component
 
 class BookUI() : Entity() {
@@ -178,6 +227,6 @@ class BookUI() : Entity() {
 			),
 		)
 		addComponent(ScaleComponent(0.5f))
-		addComponent(BookStateComponent(3, 3, Mode.FREEZE))
+		addComponent(BookStateComponent(0, 0, Mode.DEFAULT, nextMode = Mode.DEFAULT))
 	}
 }
