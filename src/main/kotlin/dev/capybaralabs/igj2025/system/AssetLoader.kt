@@ -1,6 +1,7 @@
 package dev.capybaralabs.igj2025.system
 
 import com.raylib.Image
+import com.raylib.Music
 import com.raylib.Raylib.*
 import com.raylib.Texture
 import java.nio.ByteBuffer
@@ -11,12 +12,25 @@ object AssetLoader {
 		return loadTextureFromImage(loadImage(path))
 	}
 
+	fun loadMusicStream(path: String): Music {
+		val fileData = loadFileData(path)
+
+		val memory = ByteBuffer.allocateDirect(fileData.size)
+		memory.put(fileData)
+		memory.flip() // lmao
+
+
+		return loadMusicStreamFromMemory(getFileType(path), memory, fileData.size)
+	}
+
+
 	fun loadImage(path: String): Image {
 		val fileData = loadFileData(path)
 
 		val memory = ByteBuffer.allocateDirect(fileData.size)
 		memory.put(fileData)
 		memory.flip() // lmao
+
 
 		return loadImageFromMemory(getFileType(path), memory, fileData.size)
 	}
