@@ -58,7 +58,7 @@ class InGameUi() : Entity() {
 	init {
 		addComponent(
 			TextComponent(
-				text = { "Move - [WASD]" },
+				text = { "Move - [ARROW KEYS]" },
 				verticalOrientation = VerticalOrientation.BOTTOM,
 				horizontalOrientation = HorizontalOrientation.LEFT,
 				verticalMargin = 75,
