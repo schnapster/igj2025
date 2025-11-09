@@ -69,7 +69,7 @@ class InGameUi() : Entity() {
 		)
 		addComponent(
 			TextComponent(
-				text = { "Select Cat to throw to - [M]" },
+				text = { "Select Cat to throw to - [TAB]" },
 				verticalOrientation = VerticalOrientation.BOTTOM,
 				horizontalOrientation = HorizontalOrientation.LEFT,
 				verticalMargin = 50,

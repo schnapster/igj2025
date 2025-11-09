@@ -26,10 +26,10 @@ class SpeedComponent(
 ) : Component
 
 class DirectionInputComponent(
-	val upKey: Int = KEY_W,
-	val downKey: Int = KEY_S,
-	val leftKey: Int = KEY_A,
-	val rightKey: Int = KEY_D,
+	val upKey: Int = KEY_UP,
+	val downKey: Int = KEY_DOWN,
+	val leftKey: Int = KEY_LEFT,
+	val rightKey: Int = KEY_RIGHT,
 ) : Component
 
 class ControlledDirectionInputComponent(
