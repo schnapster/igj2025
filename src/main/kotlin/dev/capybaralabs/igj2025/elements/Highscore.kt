@@ -68,7 +68,7 @@ class LocalFileHighscoreApi(
 
 	companion object {
 		private fun getDefaultDatabasePath(): String {
-			val appName = "RAitWT"
+			val appName = "RAatWT"
 			val dbFileName = "highscores.db"
 
 			val dataDir = when {

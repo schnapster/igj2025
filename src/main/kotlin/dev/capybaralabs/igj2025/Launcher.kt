@@ -33,6 +33,7 @@ import dev.capybaralabs.igj2025.elements.ModeChangeHandlerSystem
 import dev.capybaralabs.igj2025.elements.ModeNotificationEntity
 import dev.capybaralabs.igj2025.elements.MoveSystem
 import dev.capybaralabs.igj2025.elements.RelationalCatTextureRenderSystem
+import dev.capybaralabs.igj2025.elements.RelationalEnemyTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RelationalTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RotationSystem
 import dev.capybaralabs.igj2025.elements.ScoreComponent
@@ -70,7 +71,7 @@ lateinit var tempDir: File
 private lateinit var api: LocalFileHighscoreApi
 private lateinit var dbPath: String
 
-val DEBUG = false
+const val DEBUG = false
 
 fun main() {
 //	setConfigFlags(FLAG_WINDOW_RESIZABLE)
@@ -79,7 +80,7 @@ fun main() {
 //	val monitor = getCurrentMonitor()
 //	val monitorHeight = getMonitorHeight(monitor)
 //	val monitorWidth = getMonitorWidth(monitor)
-	initWindow(1200, 900, "Regular Afternoon in the Wizard Tower - by Noemi & Dennis")
+	initWindow(1200, 900, "Regular Afternoon at the Wizard Tower - by Noemi & Dennis")
 //	toggleFullscreen()
 //	toggleBorderlessWindowed()
 	setExitKey(KEY_ESCAPE)
@@ -220,6 +221,7 @@ private fun setupGame(): Scene {
 	game.addEntity(BackgroundEntity(backgroundTextureGame))
 	game.addSystem(RelationalTextureRenderSystem())
 	game.addSystem(RelationalCatTextureRenderSystem())
+	game.addSystem(RelationalEnemyTextureRenderSystem())
 
 	spawnThreeCatsWasdSwitcherAndBook(game)
 
