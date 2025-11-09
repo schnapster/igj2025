@@ -71,7 +71,7 @@ class EnemyCatchBookSystem : System {
 
 			for (book in targetEntities) {
 				val bookTexture = book.findComponent(TextureComponent::class)?.texture ?: continue
-				val bookPos = book.position
+				val bookPos = book.findComponent(PositionComponent::class)?.position ?: continue
 				val bookScale = book.findComponent(ScaleComponent::class)?.scale ?: continue
 
 				// Check pixel-perfect collision

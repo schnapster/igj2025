@@ -41,7 +41,7 @@ class BookEntity(
 	}
 
 	fun width(): Float {
-		return (BOOK_TEXTURE.width * scale).toFloat()
+		return (BOOK_TEXTURE.width * scale)
 	}
 
 	fun controlledCat(): CatEntity {
