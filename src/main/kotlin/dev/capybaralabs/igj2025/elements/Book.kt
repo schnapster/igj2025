@@ -90,8 +90,9 @@ class BookLaunchSystemCatToCat() : System {
 		val targetCat = cats.first { it.hasComponent(FocusedCatComponent::class) }
 		book.targetCat = targetCat
 
-
-		val speed = 800f
+		// Check if SLOWMO mode is active
+		val isSlowmo = book.hasComponent(SlowmoActiveComponent::class)
+		val speed = if (isSlowmo) 100f else 800f // Half speed in SLOWMO mode
 		val flyDirection = targetCat.handsPosition() - book.position
 
 		val rotationSpeed = getRandomValue(90, 270).toFloat()
