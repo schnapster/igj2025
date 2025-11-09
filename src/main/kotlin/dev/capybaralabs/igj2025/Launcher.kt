@@ -29,12 +29,15 @@ import dev.capybaralabs.igj2025.elements.GravitySystem
 import dev.capybaralabs.igj2025.elements.Highscore
 import dev.capybaralabs.igj2025.elements.InGameUi
 import dev.capybaralabs.igj2025.elements.LocalFileHighscoreApi
+import dev.capybaralabs.igj2025.elements.ModeChangeHandlerSystem
+import dev.capybaralabs.igj2025.elements.ModeNotificationEntity
 import dev.capybaralabs.igj2025.elements.MoveSystem
 import dev.capybaralabs.igj2025.elements.RelationalCatTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RelationalTextureRenderSystem
 import dev.capybaralabs.igj2025.elements.RotationSystem
 import dev.capybaralabs.igj2025.elements.ScoreComponent
 import dev.capybaralabs.igj2025.elements.ScoreUiSystem
+import dev.capybaralabs.igj2025.elements.TemporaryTextSystem
 import dev.capybaralabs.igj2025.elements.TextComponent
 import dev.capybaralabs.igj2025.elements.TextUiSystem
 import dev.capybaralabs.igj2025.elements.ThrowSystem
@@ -236,8 +239,11 @@ private fun setupGame(): Scene {
 	game.addUiSystem(ScoreUiSystem())
 	game.addUiSystem(TextUiSystem())
 	game.addUiSystem(BookUiSystem())
+	game.addUiSystem(ModeChangeHandlerSystem()) // Run after BookUiSystem to detect mode changes
+	game.addUiSystem(TemporaryTextSystem())
 	game.addEntity(InGameUi())
 	game.addEntity(BookUI())
+	game.addEntity(ModeNotificationEntity()) // Entity for displaying mode change notifications
 
 	return game
 }

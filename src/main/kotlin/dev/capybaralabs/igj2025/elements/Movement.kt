@@ -65,11 +65,24 @@ class ControlledDirectionInputSystem : DirectionInputSystem() {
 
 	override fun update(dt: Float, entity: Entity) {
 		val controlComponent = entity.findComponent(ControlledDirectionInputComponent::class)
-		val direction = controlComponent?.current?.invoke()
+		val controlledEntity = controlComponent?.current?.invoke()
+		val direction = controlledEntity
 			?.findComponent(DirectionComponent::class)?.direction
 		val input = entity.findComponent(DirectionInputComponent::class)
 
-		if (controlComponent == null || direction == null || input == null) {
+		if (controlComponent == null || direction == null || input == null || controlledEntity == null) {
+			return
+		}
+
+		// Check if the controlled entity is frozen
+		if (controlledEntity.hasComponent(FrozenMovementComponent::class)) {
+			// If frozen, reset direction but don't process input
+			for (e in controlComponent.group) {
+				e.findComponent(DirectionComponent::class)?.direction?.let {
+					it.x = 0f
+					it.y = 0f
+				}
+			}
 			return
 		}
 
@@ -91,6 +104,14 @@ class DirectDirectionInputSystem : DirectionInputSystem() {
 		val direction = entity.findComponent(DirectionComponent::class)?.direction
 		val input = entity.findComponent(DirectionInputComponent::class)
 		if (direction == null || input == null) {
+			return
+		}
+
+		// Check if the entity is frozen
+		if (entity.hasComponent(FrozenMovementComponent::class)) {
+			// If frozen, reset direction but don't process input
+			direction.x = 0f
+			direction.y = 0f
 			return
 		}
 
