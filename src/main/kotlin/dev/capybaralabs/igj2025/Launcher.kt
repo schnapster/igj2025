@@ -12,6 +12,8 @@ import dev.capybaralabs.igj2025.elements.BookCollectionSystem
 import dev.capybaralabs.igj2025.elements.BookEntity
 import dev.capybaralabs.igj2025.elements.BookFlyingSystem
 import dev.capybaralabs.igj2025.elements.BookLaunchSystemCatToCat
+import dev.capybaralabs.igj2025.elements.BookUI
+import dev.capybaralabs.igj2025.elements.BookUiSystem
 import dev.capybaralabs.igj2025.elements.BorderSystem
 import dev.capybaralabs.igj2025.elements.CatEntity
 import dev.capybaralabs.igj2025.elements.CatTexturePack.Companion.ALL_CATS
@@ -232,7 +234,9 @@ private fun setupGame(): Scene {
 	game.addUiSystem(FpsUiSystem())
 	game.addUiSystem(ScoreUiSystem())
 	game.addUiSystem(TextUiSystem())
+	game.addUiSystem(BookUiSystem())
 	game.addEntity(InGameUi())
+	game.addEntity(BookUI())
 
 	return game
 }
