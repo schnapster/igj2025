@@ -14,7 +14,8 @@ class ScoreUiSystem() : System {
 	override fun render(entity: Entity) {
 		val scoreComponent = entity.findComponent(ScoreComponent::class) ?: return
 
-		val score = (scoreComponent.score / 100).toInt()
+		val score = scoreComponent.score.toInt()
+//		val score = (scoreComponent.score / 100).toInt()
 
 		drawText("Score: $score", 20, 20, 50, GREEN)
 	}

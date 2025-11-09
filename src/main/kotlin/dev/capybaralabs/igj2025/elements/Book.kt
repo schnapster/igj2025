@@ -118,7 +118,8 @@ class BookLaunchSystemCatToCat() : System {
 			rotatingComponent.paused = true
 			speedComponent.speed = 0f
 			val throwEnd = book.position.copy()
-			val score = (throwStart - throwEnd).length()
+			val score = 1
+//			val score = (throwStart - throwEnd).length()
 			println("Score increased by $score")
 			book.findComponent(ScoreComponent::class)?.score += score
 		}

@@ -254,9 +254,9 @@ private fun onBookCatch() {
 			)
 			api.addHighscore(highscore)
 		}
-		endScreenHighscoreHolder?.text = newHighscore.toString()
+		endScreenHighscoreHolder?.text = newHighscore.toInt().toString()
 	}
-	endScreenPointHolder?.text = currentPoints.toString()
+	endScreenPointHolder?.text = currentPoints?.toInt().toString()
 	screenState = ScreenState.END
 	game = setupGame()
 }
