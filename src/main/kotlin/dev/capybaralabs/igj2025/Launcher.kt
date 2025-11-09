@@ -32,6 +32,7 @@ import dev.capybaralabs.igj2025.elements.TextUiSystem
 import dev.capybaralabs.igj2025.elements.ThrowSystem
 import dev.capybaralabs.igj2025.elements.kvector2
 import dev.capybaralabs.igj2025.elements.ui.EndScreen
+import dev.capybaralabs.igj2025.elements.ui.HighscoreElement
 import dev.capybaralabs.igj2025.elements.ui.StartScreen
 import dev.capybaralabs.igj2025.system.AssetLoader
 
@@ -42,7 +43,7 @@ enum class ScreenState() {
 	END
 }
 
-var screenState = ScreenState.START
+var screenState = ScreenState.END
 lateinit var game: Scene
 
 fun main() {
@@ -70,10 +71,11 @@ fun main() {
 
 	val endScreen = Scene()
 	endScreen.addSystem(BackgroundRenderSystem())
+	endScreen.addSystem(RelationalTextureRenderSystem())
 	endScreen.addUiSystem(TextUiSystem())
 	endScreen.addEntity(BackgroundEntity(backgroundTextureEndScreen))
 	endScreen.addEntity(EndScreen())
-
+	endScreen.addEntity(HighscoreElement())
 
 	while (!windowShouldClose()) {
 

@@ -21,7 +21,8 @@ class BookEntity(
 ): Entity() {
 
 	companion object {
-		private val BOOK_TEXTURE: Texture = AssetLoader.loadTexture("assets/image/book_idle.png")
+		private val BOOK_TEXTURE: Texture =
+			AssetLoader.loadTexture("assets/image/book_idle.png")
 	}
 
 	val scale = 0.4
