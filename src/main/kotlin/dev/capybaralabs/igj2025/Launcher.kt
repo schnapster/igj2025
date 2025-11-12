@@ -145,10 +145,11 @@ fun main() {
 	while (!windowShouldClose()) {
 
 		// state changes
-		if (isKeyReleased(KEY_ENTER) && screenState == ScreenState.START) {
+		val cont = isKeyReleased(KEY_ENTER) || isGamepadButtonReleased(0, GamepadButton.GAMEPAD_BUTTON_RIGHT_FACE_DOWN)
+		if (cont && screenState == ScreenState.START) {
 			screenState = ScreenState.GAME
 		}
-		if (isKeyReleased(KEY_ENTER) && screenState == ScreenState.END) {
+		if (cont && screenState == ScreenState.END) {
 			screenState = ScreenState.START
 			isNewHighscore = false // Reset the flag when going back to START
 		}

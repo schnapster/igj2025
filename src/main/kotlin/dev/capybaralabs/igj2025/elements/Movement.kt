@@ -1,6 +1,7 @@
 package dev.capybaralabs.igj2025.elements
 
 import com.raylib.Raylib.*
+import com.raylib.Raylib.GamepadButton.*
 import com.raylib.Raylib.KeyboardKey.*
 import com.raylib.Vector2
 import dev.capybaralabs.igj2025.ecs.Component
@@ -27,9 +28,13 @@ class SpeedComponent(
 
 class DirectionInputComponent(
 	val upKey: Int = KEY_UP,
+	val upButton: Int = GAMEPAD_BUTTON_LEFT_FACE_UP,
 	val downKey: Int = KEY_DOWN,
+	val downButton: Int = GAMEPAD_BUTTON_LEFT_FACE_DOWN,
 	val leftKey: Int = KEY_LEFT,
+	val leftButton: Int = GAMEPAD_BUTTON_LEFT_FACE_LEFT,
 	val rightKey: Int = KEY_RIGHT,
+	val rightButton: Int = GAMEPAD_BUTTON_LEFT_FACE_RIGHT,
 ) : Component
 
 class ControlledDirectionInputComponent(
@@ -47,8 +52,13 @@ class DirectionAiComponent(
 
 abstract class DirectionInputSystem : System {
 	protected fun updateDirection(direction: Vector2, input: DirectionInputComponent) {
-		direction.x = (isKeyDown(input.rightKey).toInt() - isKeyDown(input.leftKey).toInt()).toFloat()
-		direction.y = (isKeyDown(input.downKey).toInt() - isKeyDown(input.upKey).toInt()).toFloat()
+		val up = isKeyDown(input.upKey) || isGamepadButtonDown(0, input.upButton)
+		val down = isKeyDown(input.downKey) || isGamepadButtonDown(0, input.downButton)
+		val left = isKeyDown(input.leftKey) || isGamepadButtonDown(0, input.leftButton)
+		val right = isKeyDown(input.rightKey) || isGamepadButtonDown(0, input.rightButton)
+
+		direction.x = (right.toInt() - left.toInt()).toFloat()
+		direction.y = (down.toInt() - up.toInt()).toFloat()
 		val normalized = vector2Normalize(direction)
 		direction.x = normalized.x
 		direction.y = normalized.y

@@ -1,6 +1,7 @@
 package dev.capybaralabs.igj2025.elements
 
 import com.raylib.Raylib.*
+import com.raylib.Raylib.GamepadButton.*
 import com.raylib.Raylib.KeyboardKey.*
 import com.raylib.Texture
 import com.raylib.Vector2
@@ -111,9 +112,10 @@ class FocusCatSystem() : System {
 		focusedUncontrolledCat.addComponent(FocusedCatComponent)
 
 		// on tab press, alternate focus between the non-controlled cats
-		if (isKeyReleased(KEY_TAB)
+		val switchKey = isKeyReleased(KEY_TAB)
 			|| isKeyReleased(KEY_M)
-		) {
+			|| isGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT)
+		if (switchKey) {
 			val nextFocussedCat = cats
 				.filterNot { it == controlledCat }
 				.filterNot { it == focusedUncontrolledCat }

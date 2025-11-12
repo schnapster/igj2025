@@ -1,6 +1,7 @@
 package dev.capybaralabs.igj2025.elements
 
 import com.raylib.Raylib.*
+import com.raylib.Raylib.GamepadButton.*
 import com.raylib.Raylib.KeyboardKey.*
 import com.raylib.Raylib.MouseButton.MOUSE_BUTTON_LEFT
 import com.raylib.Sound
@@ -92,18 +93,20 @@ class BookLaunchSystemCatToCat() : System {
 
 		val attachedCat = book.attachedToCat ?: return
 
-		if (!isMouseButtonReleased(MOUSE_BUTTON_LEFT)
-			&& !isKeyReleased(KEY_SPACE)
-		) {
+		val throwKey = isMouseButtonReleased(MOUSE_BUTTON_LEFT)
+			|| isKeyReleased(KEY_SPACE)
+			|| isGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)
+
+		if (!throwKey) {
 			return
 		}
+		val targetCat = cats.firstOrNull { it.hasComponent(FocusedCatComponent::class) } ?: return
 		// do the throw!
 
 		// unattach from cat
 		book.position.x = attachedCat.handsPosition().x
 		book.position.y = attachedCat.handsPosition().y
 		book.attachedToCat = null
-		val targetCat = cats.first { it.hasComponent(FocusedCatComponent::class) }
 		book.targetCat = targetCat
 
 		// Check if SLOWMO mode is active
