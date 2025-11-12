@@ -1,6 +1,8 @@
 package dev.capybaralabs.igj2025.elements
 
 import com.raylib.Raylib.*
+import com.raylib.Raylib.GamepadAxis.GAMEPAD_AXIS_LEFT_X
+import com.raylib.Raylib.GamepadAxis.GAMEPAD_AXIS_LEFT_Y
 import com.raylib.Raylib.GamepadButton.*
 import com.raylib.Raylib.KeyboardKey.*
 import com.raylib.Vector2
@@ -51,14 +53,22 @@ class DirectionAiComponent(
 
 
 abstract class DirectionInputSystem : System {
+
+	private val stickDeadzone = 0.1f;
+
 	protected fun updateDirection(direction: Vector2, input: DirectionInputComponent) {
+		var leftStickX: Float = getGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X)
+		var leftStickY: Float = getGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y)
+		if (-stickDeadzone < leftStickX && leftStickX < stickDeadzone) leftStickX = 0.0f;
+		if (-stickDeadzone < leftStickY && leftStickY < stickDeadzone) leftStickY = 0.0f;
+
 		val up = isKeyDown(input.upKey) || isGamepadButtonDown(0, input.upButton)
 		val down = isKeyDown(input.downKey) || isGamepadButtonDown(0, input.downButton)
 		val left = isKeyDown(input.leftKey) || isGamepadButtonDown(0, input.leftButton)
 		val right = isKeyDown(input.rightKey) || isGamepadButtonDown(0, input.rightButton)
 
-		direction.x = (right.toInt() - left.toInt()).toFloat()
-		direction.y = (down.toInt() - up.toInt()).toFloat()
+		direction.x = leftStickX + (right.toInt() - left.toInt()).toFloat()
+		direction.y = leftStickY + (down.toInt() - up.toInt()).toFloat()
 		val normalized = vector2Normalize(direction)
 		direction.x = normalized.x
 		direction.y = normalized.y
