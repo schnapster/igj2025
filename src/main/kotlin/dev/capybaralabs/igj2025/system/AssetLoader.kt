@@ -1,9 +1,21 @@
 package dev.capybaralabs.igj2025.system
 
 import com.raylib.Image
+import com.raylib.Music
 import com.raylib.Raylib.*
+import com.raylib.Sound
 import com.raylib.Texture
 import java.nio.ByteBuffer
+
+data class MusicStreamData(
+	val music: Music,
+	val memory: ByteBuffer, // Keep reference to prevent GC
+)
+
+data class SoundData(
+	val sound: Sound,
+	val memory: ByteBuffer,  // Keep reference to prevent GC
+)
 
 object AssetLoader {
 
@@ -11,29 +23,30 @@ object AssetLoader {
 		return loadTextureFromImage(loadImage(path))
 	}
 
-//	fun loadMusicStream(path: String): Music {
-//		val fileData = loadFileData(path)
-//
-//		val memory = ByteBuffer.allocateDirect(fileData.size)
-//		memory.put(fileData)
-//		memory.flip() // lmao
-//
-//
-//		return loadMusicStreamFromMemory(getFileType(path), memory, fileData.size)
-//	}
+	fun loadMusicStream(path: String): MusicStreamData {
+		val fileData = loadFileData(path)
 
-//	fun loadSound(path: String): Sound {
-//		val fileData = loadFileData(path)
-//
-//		val memory = ByteBuffer.allocateDirect(fileData.size)
-//		memory.put(fileData)
-//		memory.flip() // lmao
-//
-//
-//		val wave = Wave(MemorySegment.ofBuffer(memory))
-//
-//		return loadSoundFromWave(wave)
-//	}
+		val memory = ByteBuffer.allocateDirect(fileData.size)
+		memory.put(fileData)
+		memory.flip()
+
+		val music = loadMusicStreamFromMemory(getFileType(path), memory, fileData.size)
+		return MusicStreamData(music, memory)
+	}
+
+	fun loadSound(path: String): SoundData {
+		val fileData = loadFileData(path)
+
+		val memory = ByteBuffer.allocateDirect(fileData.size)
+		memory.put(fileData)
+		memory.flip()
+
+		val wave = loadWaveFromMemory(getFileType(path), memory, fileData.size)
+		val sound = loadSoundFromWave(wave)
+		unloadWave(wave)
+
+		return SoundData(sound, memory)
+	}
 
 
 	fun loadImage(path: String): Image {
@@ -41,8 +54,7 @@ object AssetLoader {
 
 		val memory = ByteBuffer.allocateDirect(fileData.size)
 		memory.put(fileData)
-		memory.flip() // lmao
-
+		memory.flip()
 
 		return loadImageFromMemory(getFileType(path), memory, fileData.size)
 	}

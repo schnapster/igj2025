@@ -5,12 +5,15 @@ import com.raylib.Raylib.*
 import dev.capybaralabs.igj2025.ecs.Component
 import dev.capybaralabs.igj2025.ecs.Entity
 import dev.capybaralabs.igj2025.ecs.System
+import dev.capybaralabs.igj2025.system.AssetLoader
+import dev.capybaralabs.igj2025.system.MusicStreamData
 
 class MusicComponent(
 	name: String,
 ) : Component {
 
-	val music: Music = loadMusicStream("assets/audio/$name")
+	private val musicData: MusicStreamData = AssetLoader.loadMusicStream("assets/audio/$name")
+	val music: Music = musicData.music
 
 	init {
 		playMusicStream(music)

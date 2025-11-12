@@ -10,6 +10,7 @@ import dev.capybaralabs.igj2025.ecs.Component
 import dev.capybaralabs.igj2025.ecs.Entity
 import dev.capybaralabs.igj2025.ecs.System
 import dev.capybaralabs.igj2025.system.AssetLoader
+import dev.capybaralabs.igj2025.system.SoundData
 import java.util.concurrent.ThreadLocalRandom
 
 
@@ -66,9 +67,13 @@ class FlyingComponent(
 class BookLaunchSystemCatToCat() : System {
 
 	companion object {
-		val MEOW1: Sound = loadSound("assets/audio/meow.wav")
-		val MEOW2: Sound = loadSound("assets/audio/meow2.wav")
-		val MEOW3: Sound = loadSound("assets/audio/meow3.wav")
+		private val MEOW1_DATA: SoundData = AssetLoader.loadSound("assets/audio/meow.wav")
+		private val MEOW2_DATA: SoundData = AssetLoader.loadSound("assets/audio/meow2.wav")
+		private val MEOW3_DATA: SoundData = AssetLoader.loadSound("assets/audio/meow3.wav")
+
+		val MEOW1: Sound = MEOW1_DATA.sound
+		val MEOW2: Sound = MEOW2_DATA.sound
+		val MEOW3: Sound = MEOW3_DATA.sound
 
 		val MEOWS = listOf(MEOW1, MEOW2, MEOW3)
 
