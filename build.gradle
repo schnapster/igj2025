@@ -4,8 +4,8 @@ plugins {
 	id "org.beryx.runtime" version "$badassRuntimePluginVersion"
 }
 
-// Set version from project property or default to v1
-version = project.hasProperty('version') ? project.property('version') : 'v1'
+// Set version from project property or default to b1
+version = project.hasProperty('version') ? project.property('version') : 'b1'
 
 kotlin {
 	jvmToolchain {
@@ -47,8 +47,8 @@ runtime {
 
 	jpackage {
 		imageName = 'RAatWT'
-		// jpackage requires numeric version format, strip 'v' prefix if present
-		appVersion = project.version.toString().startsWith('v') ? project.version.toString().substring(1) : project.version.toString()
+		// jpackage requires numeric version format, strip 'b' prefix if present
+		appVersion = project.version.toString().startsWith('b') ? project.version.toString().substring(1) : project.version.toString()
 
 		// Platform-specific options
 		def os = org.gradle.internal.os.OperatingSystem.current()

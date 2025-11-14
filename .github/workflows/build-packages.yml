@@ -3,7 +3,7 @@ name: Build Images
 on:
   push:
     tags:
-      - 'v*'
+      - 'b*'
   workflow_dispatch:
   pull_request:
 
@@ -34,10 +34,10 @@ jobs:
       - name: Extract version from tag
         id: get_version
         run: |
-          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+          if [[ "${{ github.ref }}" == refs/tags/b* ]]; then
             VERSION=${GITHUB_REF#refs/tags/}
           else
-            VERSION=$(git describe --tags --always --dirty 2>/dev/null || echo "vdev")
+            VERSION=$(git describe --tags --always --dirty 2>/dev/null || echo "bdev")
           fi
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "version=$VERSION" >> $GITHUB_OUTPUT
@@ -96,7 +96,7 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/b')
     permissions:
       contents: write
 
