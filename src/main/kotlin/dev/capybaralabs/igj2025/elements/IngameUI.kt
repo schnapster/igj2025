@@ -58,7 +58,7 @@ class InGameUi() : Entity() {
 	init {
 		addComponent(
 			TextComponent(
-				text = { "Move - [ARROW KEYS]" },
+				text = { "Move - [ARROW KEYS] or [LEFT STICK]" },
 				verticalOrientation = VerticalOrientation.BOTTOM,
 				horizontalOrientation = HorizontalOrientation.LEFT,
 				verticalMargin = 75,
@@ -69,7 +69,7 @@ class InGameUi() : Entity() {
 		)
 		addComponent(
 			TextComponent(
-				text = { "Select Cat to throw to - [TAB]" },
+				text = { "Select Cat to throw to - [TAB] or [O / B]" },
 				verticalOrientation = VerticalOrientation.BOTTOM,
 				horizontalOrientation = HorizontalOrientation.LEFT,
 				verticalMargin = 50,
@@ -80,7 +80,7 @@ class InGameUi() : Entity() {
 		)
 		addComponent(
 			TextComponent(
-				text = { "Throw - [SPACE]" },
+				text = { "Throw - [SPACE] or [X / A]" },
 				verticalOrientation = VerticalOrientation.BOTTOM,
 				horizontalOrientation = HorizontalOrientation.LEFT,
 				verticalMargin = 25,
