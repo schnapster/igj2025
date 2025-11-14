@@ -3,6 +3,7 @@ package dev.capybaralabs.igj2025.elements
 import com.raylib.Raylib.*
 import com.raylib.Raylib.GamepadButton.*
 import com.raylib.Raylib.KeyboardKey.*
+import com.raylib.Raylib.MouseButton.MOUSE_BUTTON_RIGHT
 import com.raylib.Texture
 import com.raylib.Vector2
 import dev.capybaralabs.igj2025.ecs.Component
@@ -114,6 +115,7 @@ class FocusCatSystem() : System {
 		// on tab press, alternate focus between the non-controlled cats
 		val switchKey = isKeyReleased(KEY_TAB)
 			|| isKeyReleased(KEY_M)
+			|| isMouseButtonReleased(MOUSE_BUTTON_RIGHT)
 			|| isGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT)
 		if (switchKey) {
 			val nextFocussedCat = cats
